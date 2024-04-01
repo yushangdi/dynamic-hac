@@ -1,0 +1,110 @@
+diff --git aparlayann/utils/point_range.h bparlayann/utils/point_range.h
+--- aparlayann/utils/point_range.h
++++ bparlayann/utils/point_range.h
+@@ -55,7 +55,7 @@ long dim_round_up(long dim, long tp_size
+ template<typename T, class Point>
+ struct PointRange{
+ 
+-  long dimension(){return dims;}
++  long dimension() const {return dims;}
+   
+   PointRange() = default;
+ 
+@@ -100,6 +100,10 @@ struct PointRange{
+           index = ceiling;
+       }
+   }
++  
++  PointRange(const size_t num_points, const unsigned int dims,
++             const unsigned int aligned_dims, T* values)
++      : n(num_points), dims(dims), aligned_dims(aligned_dims), values(values) {}
+ 
+   // PointRange(char* filename) {
+   //   if(filename == NULL) {
+@@ -118,11 +122,13 @@ struct PointRange{
+ 	//       << " points with dimension " << dims << std::endl;
+   // }
+ 
+-  size_t size() { return n; }
++  size_t size() const { return n; }
+   
+-  Point operator [] (long i) {
++  Point operator [] (long i) const {
+     return Point(values+i*aligned_dims, dims, aligned_dims, i);
+   }
++  
++  T* get_values() const { return values; }
+ 
+   ~PointRange() {
+     if (values != nullptr) {
+diff --git aparlayann/vamana/BUILD bparlayann/vamana/BUILD
+--- aparlayann/vamana/BUILD
++++ bparlayann/vamana/BUILD
+@@ -3,6 +3,7 @@
+ package(
+     default_applicable_licenses = ["//third_party/parlayann:license"],
+     default_visibility = [
++        "//research/graph/in_memory/clustering/dynamic/hac:__subpackages__",
+         "//research/graph/in_memory/graph_builder:__subpackages__",
+         "//third_party/parlayann:__subpackages__",
+     ],
+diff --git aparlayann/vamana/index.h bparlayann/vamana/index.h
+--- aparlayann/vamana/index.h
++++ bparlayann/vamana/index.h
+@@ -102,6 +102,10 @@ struct knn_index {
+     }
+ 
+     auto new_neighbors_seq = parlay::to_sequence(new_nbhs);
++    auto less_neighbor = [&](indexType j, indexType k) {
++      return Points[p].distance(Points[j]) < Points[p].distance(Points[k]);
++    };
++    parlay::sort_inplace(new_neighbors_seq, less_neighbor);
+     return new_neighbors_seq;
+   }
+ 
+@@ -133,10 +137,10 @@ struct knn_index {
+     parlay::sequence<indexType> inserts = parlay::tabulate(Points.size(), [&] (size_t i){
+ 					    return static_cast<indexType>(i);});
+     batch_insert(inserts, G, Points, BuildStats, true, 2, .02);
+-    parlay::parallel_for (0, G.size(), [&] (long i) {
+-      auto less = [&] (indexType j, indexType k) {
+-		    return Points[i].distance(Points[j]) < Points[i].distance(Points[k]);};
+-      G[i].sort(less);});
++    // parlay::parallel_for (0, G.size(), [&] (long i) {
++    //   auto less = [&] (indexType j, indexType k) {
++		//     return Points[i].distance(Points[j]) < Points[i].distance(Points[k]);};
++    //   G[i].sort(less);});
+   }
+ 
+   void lazy_delete(parlay::sequence<indexType> deletes, GraphI &G) {
+@@ -231,7 +235,7 @@ struct knn_index {
+     float frac = 0.0;
+     float progress_inc = .1;
+     size_t max_batch_size = std::max(
+-        std::min(static_cast<size_t>(max_fraction * static_cast<float>(n)),
++        std::min(static_cast<size_t>(max_fraction * static_cast<float>(m)),
+                  1000000ul),
+         1ul);
+     parlay::sequence<int> rperm;
+@@ -293,6 +297,10 @@ struct knn_index {
+ 
+       parlay::parallel_for(floor, ceiling, [&](size_t i) {
+         G[shuffled_inserts[i]].update_neighbors(new_out_[i-floor]);
++        auto less_neighbor = [&](indexType j, indexType k) {
++          return Points[shuffled_inserts[i]].distance(Points[j]) < Points[shuffled_inserts[i]].distance(Points[k]);
++        };
++        G[shuffled_inserts[i]].sort(less_neighbor);
+       });
+       auto grouped_by = parlay::group_by_key(parlay::flatten(to_flatten));
+       t_bidirect.stop();
+@@ -306,6 +314,10 @@ struct knn_index {
+         if (newsize <= BP.R) {
+           add_neighbors_without_repeats(G[index], candidates);
+           G[index].update_neighbors(candidates);
++          auto less_neighbor = [&](indexType j, indexType k) {
++            return Points[index].distance(Points[j]) < Points[index].distance(Points[k]);
++          };
++        G[index].sort(less_neighbor);
+         } else {
+           auto new_out_2_ = robustPrune(index, std::move(candidates), G, Points);  
+           G[index].update_neighbors(new_out_2_);    

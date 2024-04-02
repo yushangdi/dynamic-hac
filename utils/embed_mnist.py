@@ -40,10 +40,10 @@ from sklearn.datasets import fetch_openml
 import umap
 
 _PLOT = flags.DEFINE_bool(
-    "plot", default=False, help="plot and save the embedded data."
+    "plot", default=False, help="Plot the embedded data."
 )
 
-_OUTPUT = flags.DEFINE_string("output", default=None, help="output directory.")
+_OUTPUT = flags.DEFINE_string("output", default=None, help="Output directory.")
 
 
 def main(argv):
@@ -61,16 +61,15 @@ def main(argv):
 
   if plot:
     sns.set(context="paper", style="white")
-  fig, ax = plt.subplots(figsize=(12, 10))
-  plt.scatter(
-      embedding[:, 0], embedding[:, 1], c=labels, cmap="Spectral", s=0.1
-  )
-  plt.setp(ax, xticks=[], yticks=[])
-  plt.title("MNIST data embedded into two dimensions by UMAP", fontsize=18)
-  plt.savefig(
-      output_dir + "/mnist_embed.png",
-  )
-
+    fig, ax = plt.subplots(figsize=(12, 10))
+    plt.scatter(
+        embedding[:, 0], embedding[:, 1], c=labels, cmap="Spectral", s=0.1
+    )
+    plt.setp(ax, xticks=[], yticks=[])
+    plt.title("MNIST data embedded into two dimensions by UMAP", fontsize=18)
+    plt.savefig(
+        output_dir + "/mnist_embed.png",
+    )
 
 if __name__ == "__main__":
   flags.mark_flags_as_required(["output"])

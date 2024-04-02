@@ -147,7 +147,7 @@ def main(argv):
     points = get_data(dataset_subdirs[dataset_name])
   else:
     raise ValueError(f"Unknown dataset: {dataset_name}")
-  # normalize
+  # Normalize each vector to have a unit norm
   points = points / np.linalg.norm(points, axis=-1, keepdims=True)
   # add random noise to avoid duplicate entry
   noise = np.random.uniform(-1e-6, 1e-6, size=points.shape)

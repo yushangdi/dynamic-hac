@@ -190,20 +190,6 @@ cc_binary(
 # )
 
 # pytype_strict_binary(
-#     name = "embed_mnist",
-#     srcs = ["embed_mnist.py"],
-#     deps = [
-#         "//third_party/py/absl:app",
-#         "//third_party/py/absl/flags",
-#         "//third_party/py/matplotlib",
-#         "//third_party/py/numpy",
-#         "//third_party/py/seaborn",
-#         "//third_party/py/sklearn",
-#         "//third_party/py/umap",
-#     ],
-# )
-
-# pytype_strict_binary(
 #     name = "grove_main",
 #     srcs = ["grove_main.py"],
 #     python_version = "PY3",

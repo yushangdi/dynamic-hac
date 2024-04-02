@@ -27,7 +27,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Run experiments on GraphGrove online SCC."""
+"""Run experiments on GraphGrove online SCC.
+Results are stored to base_dir+results/results_grove/
+
+"""
 
 from collections.abc import Sequence
 import struct
@@ -46,8 +49,7 @@ from scipy.spatial.distance import cdist
 import sklearn.metrics.cluster as cluster_metrics
 import tqdm
 
-
-base_dir = "parclusterer_exp/benchmark/"
+base_dir = "/home/ubuntu/dynamic-hac/"
 
 _DATASET = flags.DEFINE_string(
     "dataset",
@@ -62,6 +64,7 @@ _EVAL_INDEX_RATIO = flags.DEFINE_float(
     0,
     "only store ARIs for index [x*n, n]. Deletion stops at this index.",
 )
+
 _BATCH_NUM = flags.DEFINE_integer(
     "batch_num", 1000, "num. of dendroram to evaluate."
 )
@@ -211,13 +214,13 @@ def main(argv):
       "NMI_Num_Clusters": nmis_num_clusters,
   }
   df = pd.DataFrame(df_dict)
-  df.to_csv(base_dir + f"results_grove/{dataset_name}_{batch_num}_nmi.csv")
+  df.to_csv(base_dir + f"results/results_grove/{dataset_name}_{batch_num}_nmi.csv")
   time_dict = {
       "Index": indices,
       "Round": times,
   }
   df = pd.DataFrame(time_dict)
-  df.to_csv(base_dir + f"results_grove/{dataset_name}_{batch_num}_time.csv")
+  df.to_csv(base_dir + f"results/results_grove/{dataset_name}_{batch_num}_time.csv")
 
   # print(scc.levels)
   # for level in scc.levels:

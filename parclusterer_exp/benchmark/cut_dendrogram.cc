@@ -32,12 +32,12 @@
 
 #include <string>
 
-#include "third_party/absl/log/log.h"
-#include "third_party/absl/status/statusor.h"
-#include "approximate_hac_experiments/parclusterer_exp/benchmark/io.h"
-#include "third_party/graph_mining/in_memory/clustering/dendrogram.h"
-#include "third_party/graph_mining/in_memory/clustering/in_memory_clusterer.h"
-#include "third_party/graph_mining/in_memory/clustering/types.h"
+#include "absl/log/log.h"
+#include "absl/status/statusor.h"
+#include "parclusterer_exp/benchmark/io.h"
+#include "in_memory/clustering/dendrogram.h"
+#include "in_memory/clustering/in_memory_clusterer.h"
+#include "in_memory/clustering/types.h"
 
 namespace py = ::pybind11;
 

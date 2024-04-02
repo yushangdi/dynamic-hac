@@ -16,6 +16,8 @@ package(default_visibility = [
     "//visibility:public",
 ])
 
+load("@pybind11_bazel//:build_defs.bzl", "pybind_extension")
+
 cc_library(
     name = "edge_feeder",
     hdrs = ["edge_feeder.h"],
@@ -167,19 +169,6 @@ cc_binary(
 # )
 
 # pytype_strict_binary(
-#     name = "fvecs_converter",
-#     srcs = ["fvecs_converter.py"],
-#     test_lib = True,
-#     deps = [
-#         "//third_party/py/absl:app",
-#         "//third_party/py/absl/flags",
-#         "//third_party/py/absl/logging",
-#         "//third_party/py/numpy",
-#         "//third_party/py/sklearn",
-#     ],
-# )
-
-# pytype_strict_binary(
 #     name = "run_experiment",
 #     srcs = ["run_experiment.py"],
 #     deps = [
@@ -228,57 +217,19 @@ cc_library(
     ],
 )
 
-# pybind_extension(
-#     name = "cut_dendrogram",
-#     srcs = ["cut_dendrogram.cc"],
-#     deps = [
-#         ":io",
-#         "@com_google_absl//absl/log",
-#         "@com_google_absl//absl/status:statusor",
-#         "@com_github_graph_mining//in_memory/clustering:dendrogram",
-#         "@com_github_graph_mining//in_memory/clustering:in_memory_clusterer",
-#         "@com_github_graph_mining//in_memory/clustering:types",
-#     ],
-# )
+pybind_extension(
+    name = "cut_dendrogram",
+    srcs = ["cut_dendrogram.cc"],
+    deps = [
+        ":io",
+        "@com_google_absl//absl/log",
+        "@com_google_absl//absl/status:statusor",
+        "@com_github_graph_mining//in_memory/clustering:dendrogram",
+        "@com_github_graph_mining//in_memory/clustering:in_memory_clusterer",
+        "@com_github_graph_mining//in_memory/clustering:types",
+    ],
+)
 
-# pytype_strict_library(
-#     name = "plot_io",
-#     srcs = ["plot_io.py"],
-#     deps = [
-#         "//third_party/py/numpy",
-#         "//third_party/py/pandas:pandas_internal",
-#     ],
-# )
-
-# pytype_strict_binary(
-#     name = "plot_main",
-#     srcs = ["plot_main.py"],
-#     test_lib = True,
-#     deps = [
-#         ":plot_io",
-#         "//third_party/py/absl:app",
-#         "//third_party/py/jinja2",
-#         "//third_party/py/matplotlib",
-#         "//third_party/py/numpy",
-#         "//third_party/py/pandas:pandas_internal",
-#         "//third_party/py/seaborn",
-#     ],
-# )
-
-# pytype_strict_binary(
-#     name = "compute_main",
-#     srcs = ["compute_main.py"],
-#     test_lib = True,
-#     deps = [
-#         ":plot_io",
-#         "//third_party/py/absl:app",
-#         "//third_party/py/jinja2",
-#         "//third_party/py/matplotlib",
-#         "//third_party/py/numpy",
-#         "//third_party/py/pandas:pandas_internal",
-#         "//third_party/py/seaborn",
-#     ],
-# )
 
 # pytype_strict_library(
 #     name = "grinch",

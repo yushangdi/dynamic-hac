@@ -41,3 +41,5 @@ MODULE.bazel
 MODULE.bazel.lock
 bazel-dynamic-hac
 data
+results
+parclusterer_exp/benchmark/__pycache__

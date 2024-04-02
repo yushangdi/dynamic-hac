@@ -47,9 +47,14 @@ git_repository(
     commit = "aaf5a5a1b84d35341776a8b1694640ea07c7c596"
 )
 
-git_repository(
+# git_repository(
+#     name = "parlayann",
+#     remote = "git@github.com:yushangdi/ParlayANN.git",
+#     commit = "fd4a332de38cbef8c225bd3b259a0b45635b827e", # branch sync
+#     strip_prefix = "algorithms/",
+# )
+
+local_repository(
     name = "parlayann",
-    remote = "git@github.com:yushangdi/ParlayANN.git",
-    commit = "fd4a332de38cbef8c225bd3b259a0b45635b827e", # branch sync
-    strip_prefix = "algorithms/",
+    path = "ParlayANN/",
 )

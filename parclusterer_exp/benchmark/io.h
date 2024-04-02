@@ -40,19 +40,19 @@
 #include <utility>
 #include <vector>
 
-#include "third_party/absl/base/optimization.h"
-#include "third_party/absl/container/flat_hash_map.h"
-#include "third_party/absl/log/check.h"
-#include "third_party/absl/log/log.h"
-#include "third_party/absl/status/status.h"
-#include "third_party/absl/status/statusor.h"
-#include "third_party/absl/strings/str_cat.h"
-#include "third_party/graph_mining/in_memory/clustering/dendrogram.h"
-#include "third_party/graph_mining/in_memory/clustering/in_memory_clusterer.h"
-#include "third_party/graph_mining/in_memory/status_macros.h"
-#include "third_party/parlay/include/parlay/slice.h"
-#include "third_party/parlayann/utils/euclidian_point.h"
-#include "third_party/parlayann/utils/point_range.h"
+#include "absl/base/optimization.h"
+#include "absl/container/flat_hash_map.h"
+#include "absl/log/check.h"
+#include "absl/log/log.h"
+#include "absl/status/status.h"
+#include "absl/status/statusor.h"
+#include "absl/strings/str_cat.h"
+#include "graph_mining/in_memory/clustering/dendrogram.h"
+#include "graph_mining/in_memory/clustering/in_memory_clusterer.h"
+#include "graph_mining/in_memory/status_macros.h"
+#include "parlay/include/parlay/slice.h"
+#include "parlayann/utils/euclidian_point.h"
+#include "parlayann/utils/point_range.h"
 
 namespace graph_mining::in_memory {
 

@@ -236,8 +236,8 @@ cc_library(
         "@com_github_graph_mining//in_memory/clustering:in_memory_clusterer",
         "@com_github_graph_mining//in_memory/clustering/hac:parhac",
         "@parlaylib//parlay:slice",
-        "@parlayann//utils:euclidian_point",
-        "@parlayann//utils:point_range",
+        "@parlayann//algorithms/utils:euclidian_point",
+        "@parlayann//algorithms/utils:point_range",
     ],
 )
 

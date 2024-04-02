@@ -43,18 +43,18 @@ from sklearn.datasets import fetch_covtype
 _DATA_FILE = flags.DEFINE_string(
     "data_file",
     default=None,
-    help="Colossus file to read data.",
+    help="Input data file.",
 )
 
 _OUTPUT_FILE = flags.DEFINE_string(
     "output_file",
     default=None,
-    help="Colossus file to store fves points and labels.",
+    help="Output prefix for fves points and labels.",
 )
 
-_DATA = flags.DEFINE_string("data", default=None, help="name of data set.")
+_DATA = flags.DEFINE_string("data", default=None, help="Name of data set.")
 
-_PERMUTE = flags.DEFINE_bool("permute", default=True, help="permute the data.")
+_PERMUTE = flags.DEFINE_bool("permute", default=True, help="Permute the data randomly if true.")
 
 
 class Error(Exception):
@@ -206,8 +206,8 @@ def store(input_file, output_file, dataset, permute=True):
 
   print("labels", labels)
   labels_bytes = labels.astype(int).tobytes()
-  write_file(output_file + "_label.csv", labels_bytes)
-  print("stored labels to ", output_file + "_label.csv")
+  write_file(output_file + "_label.bin", labels_bytes)
+  print("stored labels to ", output_file + "_label.bin")
   return stored_points
 
 

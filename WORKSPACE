@@ -58,3 +58,14 @@ local_repository(
     name = "parlayann",
     path = "ParlayANN/",
 )
+
+FARMHASH_COMMIT = "0d859a811870d10f53a594927d0d0b97573ad06d"
+FARMHASH_SHA256 = "18392cf0736e1d62ecbb8d695c31496b6507859e8c75541d7ad0ba092dc52115"
+
+http_archive(
+    name = "farmhash_archive",
+    build_file = "@com_github_graph_mining//utils:farmhash.BUILD",
+    sha256 = FARMHASH_SHA256,
+    strip_prefix = "farmhash-{commit}".format(commit = FARMHASH_COMMIT),
+    urls = ["https://github.com/google/farmhash/archive/{commit}.tar.gz".format(commit = FARMHASH_COMMIT)],
+)

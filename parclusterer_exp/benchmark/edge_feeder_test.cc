@@ -26,7 +26,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "approximate_hac_experiments/parclusterer_exp/benchmark/edge_feeder.h"
+#include "parclusterer_exp/benchmark/edge_feeder.h"
 
 #include <cmath>
 #include <cstdint>
@@ -34,14 +34,14 @@
 #include <optional>
 #include <vector>
 
-#include "testing/base/public/gmock.h"
-#include "testing/base/public/gunit.h"
-#include "third_party/absl/base/optimization.h"
-#include "third_party/graph_mining/in_memory/status_macros.h"
-#include "third_party/parlayann/utils/euclidian_point.h"
-#include "third_party/parlayann/utils/point_range.h"
+#include "gtest/gtest.h"
+#include "gmock/gmock.h"
+#include "absl/base/optimization.h"
+#include "in_memory/status_macros.h"
+#include "algorithms/utils/euclidian_point.h"
+#include "algorithms/utils/point_range.h"
 
-namespace research_graph::in_memory {
+namespace graph_mining::in_memory {
 namespace {
 
 using PointRange = PointRange<float, Euclidian_Point<float>>;
@@ -95,7 +95,7 @@ TEST(EdgeFeederTest, SimpleTest) {
 
   ASSERT_OK_AND_ASSIGN(edges, feeder.NextBatch());
   EXPECT_THAT(edges, IsEmpty());
-  free(values);
+//   free(values);
 }
 
 TEST(EdgeFeederTest, NeighborWithinBatchTest) {
@@ -147,7 +147,7 @@ TEST(EdgeFeederTest, NeighborWithinBatchTest) {
 
   ASSERT_OK_AND_ASSIGN(edges, feeder.NextBatch());
   EXPECT_THAT(edges, IsEmpty());
-  free(values);
+//   free(values);
 }
 
 }  // namespace

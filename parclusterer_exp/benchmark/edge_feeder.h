@@ -50,19 +50,19 @@
 #include "absl/status/statusor.h"
 #include "absl/strings/str_cat.h"
 #include "parclusterer_exp/benchmark/io.h"
-#include "graph_mining/in_memory/clustering/config.proto.h"
-#include "graph_mining/in_memory/clustering/graph.h"
-#include "graph_mining/in_memory/clustering/in_memory_clusterer.h"
-#include "graph_mining/in_memory/status_macros.h"
-#include "graph_mining/utils/status/thread_safe_status.h"
-#include "parlay/include/parlay/parallel.h"
-#include "parlayann/utils/beamSearch.h"
-#include "parlayann/utils/euclidian_point.h"
-#include "parlayann/utils/graph.h"
-#include "parlayann/utils/point_range.h"
-#include "parlayann/utils/stats.h"
-#include "parlayann/utils/types.h"
-#include "parlayann/vamana/index.h"
+#include "in_memory/clustering/config.pb.h"
+#include "in_memory/clustering/graph.h"
+#include "in_memory/clustering/in_memory_clusterer.h"
+#include "in_memory/status_macros.h"
+#include "utils/status/thread_safe_status.h"
+#include "parlay/parallel.h"
+#include "algorithms/utils/beamSearch.h"
+#include "algorithms/utils/euclidian_point.h"
+#include "algorithms/utils/graph.h"
+#include "algorithms/utils/point_range.h"
+#include "algorithms/utils/stats.h"
+#include "algorithms/utils/types.h"
+#include "algorithms/vamana/index.h"
 
 namespace graph_mining::in_memory {
 
@@ -121,12 +121,12 @@ class EdgeFeeder {
       graph_mining::in_memory::InMemoryClusterer::Graph::AdjacencyList;
   using NodeId = graph_mining::in_memory::InMemoryClusterer::NodeId;
   using Point = Euclidian_Point<T>;
-  using PointRange = PointRange<T, Point>;
+  using PointRangeT = PointRange<T, Point>;
   using indexType = unsigned int;
-  using findex = knn_index<Point, PointRange, indexType>;
+  using findex = knn_index<Point, PointRangeT, indexType>;
 
  public:
-  EdgeFeeder(int k, PointRange& points, std::size_t num_batch = 100,
+  EdgeFeeder(int k, PointRangeT& points, std::size_t num_batch = 100,
              int max_degree = 50, int L = 50, double alpha = 1.2,
              std::size_t first_batch_size = 0)
       : k_(k),  // increment 1 because the result contains the point itself.
@@ -146,7 +146,7 @@ class EdgeFeeder {
     CHECK_LE(first_batch_size_, points.size());
     knn_ = std::vector<std::vector<std::pair<indexType, T>>>(points.size());
     G_ = Graph<unsigned int>(max_degree_, points_.size());
-    auto BP = BuildParams(max_degree_, beam_size_, alpha_, 0, 0, 0, 0);
+    auto BP = BuildParams(max_degree_, beam_size_, alpha_, true);
     I_ = std::make_unique<findex>(BP);
     I_->start_point = 0;
   }
@@ -169,12 +169,12 @@ class EdgeFeeder {
     parlay::sequence<indexType> inserts = parlay::tabulate(
         end - start,
         [&](size_t i) { return static_cast<indexType>(i + start); });
-    I_->batch_insert(inserts, G_, points_, BuildStats, true, 2, .02);
+    I_->batch_insert(inserts, G_, points_, BuildStats, 1.0, true, 2, .02);
     std::cout << "index updated\n";
 
     // Build index
     // auto points_insert = PointRangeCopy(points_, 0, end);
-    // auto BP = BuildParams(max_degree_, beam_size_, alpha_, 0, 0, 0, 0);
+    // auto BP = BuildParams(max_degree_, beam_size_, alpha_, true);
     // I_ = std::make_unique<findex>(BP);
     // I_->build_index(G_, points_insert, BuildStats);
 
@@ -182,7 +182,7 @@ class EdgeFeeder {
     auto QP = QueryParams(k_ + 1, beam_size_, 1.35, G_.size(), G_.max_degree());
     parlay::parallel_for(start, end, [&](size_t i) {
       auto start_point = i;
-      auto neighbors = (beam_search<Point, PointRange, indexType>(
+      auto neighbors = (beam_search<Point, PointRangeT, indexType>(
                             points_[i], G_, points_, start_point, QP))
                            .first.first;
       CHECK_GE(neighbors.size(), QP.k) << "id: " << i;
@@ -210,7 +210,7 @@ class EdgeFeeder {
             {knn_[i][j].first, 1.0 / (1 + knn_[i][j].second)});
       }
       edges[i - start] =
-          AdjacencyList(i, 1, std::move(outgoing_edges), std::nullopt);
+          {i, 1, std::move(outgoing_edges), std::nullopt};
     });
     return edges;
   }
@@ -222,7 +222,7 @@ class EdgeFeeder {
   std::size_t current_index_ = 0;
   const int beam_size_;
   const double alpha_;
-  PointRange& points_;
+  PointRangeT& points_;
   std::vector<std::vector<std::pair<indexType, T>>> knn_;
   Graph<unsigned int> G_;
   std::unique_ptr<findex> I_;

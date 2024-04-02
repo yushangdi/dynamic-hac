@@ -32,10 +32,11 @@
 *.app
 
 .DS_Store
-parclusterer_exp/benchmark/ParlayANN/
-parclusterer_exp/benchmark/bazel-bin
-parclusterer_exp/benchmark/bazel-benchmark
-parclusterer_exp/benchmark/bazel-out
-parclusterer_exp/benchmark/bazel-testlogs
-parclusterer_exp/benchmark/MODULE.bazel
-parclusterer_exp/benchmark/MODULE.bazel.lock
+ParlayANN/
+bazel-bin
+bazel-benchmark
+bazel-out
+bazel-testlogs
+MODULE.bazel
+MODULE.bazel.lock
+bazel-dynamic-hac

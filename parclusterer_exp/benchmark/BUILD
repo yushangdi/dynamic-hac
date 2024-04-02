@@ -49,11 +49,12 @@ cc_test(
     srcs = ["edge_feeder_test.cc"],
     deps = [
         ":edge_feeder",
-        "//testing/base/public:gunit_main",
+        "@com_google_googletest//:gtest_main",     
+        "@com_google_googletest//:gtest",  
         "@com_google_absl//absl/base:core_headers",
         "@com_github_graph_mining//in_memory:status_macros",
-        "@parlayann//utils:euclidian_point",
-        "@parlayann//utils:point_range",
+        "@parlayann//algorithms/utils:euclidian_point",
+        "@parlayann//algorithms/utils:point_range",
     ],
 )
 
@@ -81,9 +82,9 @@ cc_library(
         "@com_github_graph_mining//in_memory/clustering/hac:parhac",
         "@com_github_graph_mining//in_memory/parallel:scheduler",
         "@com_github_graph_mining//utils:timer",
-        "@parlaylib//parlay/include/parlay:parallel",
-        "@parlayann//utils:euclidian_point",
-        "@parlayann//utils:point_range",
+        "@parlaylib//parlay:parallel",
+        "@parlayann//algorithms/utils:euclidian_point",
+        "@parlayann//algorithms/utils:point_range",
     ],
 )
 

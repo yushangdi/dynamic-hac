@@ -47,12 +47,12 @@
 #include "absl/status/status.h"
 #include "absl/status/statusor.h"
 #include "absl/strings/str_cat.h"
-#include "graph_mining/in_memory/clustering/dendrogram.h"
-#include "graph_mining/in_memory/clustering/in_memory_clusterer.h"
-#include "graph_mining/in_memory/status_macros.h"
-#include "parlay/include/parlay/slice.h"
-#include "parlayann/utils/euclidian_point.h"
-#include "parlayann/utils/point_range.h"
+#include "in_memory/clustering/dendrogram.h"
+#include "in_memory/clustering/in_memory_clusterer.h"
+#include "in_memory/status_macros.h"
+#include "parlay/slice.h"
+#include "algorithms/utils/euclidian_point.h"
+#include "algorithms/utils/point_range.h"
 
 namespace graph_mining::in_memory {
 

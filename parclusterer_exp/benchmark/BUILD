@@ -32,15 +32,15 @@ cc_library(
         "@com_github_graph_mining//in_memory/clustering:graph",
         "@com_github_graph_mining//in_memory/clustering:in_memory_clusterer",
         "@com_github_graph_mining//in_memory/clustering/hac:parhac",
-        "//third_party/graph_mining/utils/status:thread_safe_status",
-        "@parlaylib//parlay/include/parlay:parallel",
-        "//third_party/parlayann/utils:beamSearch",
-        "//third_party/parlayann/utils:euclidian_point",
-        "//third_party/parlayann/utils:graph",
-        "//third_party/parlayann/utils:point_range",
-        "//third_party/parlayann/utils:stats",
-        "//third_party/parlayann/utils:types",
-        "//third_party/parlayann/vamana:index",
+        "@com_github_graph_mining//utils/status:thread_safe_status",
+        "@parlaylib//parlay:parallel",
+        "@parlayann//algorithms/utils:beamSearch",
+        "@parlayann//algorithms/utils:euclidian_point",
+        "@parlayann//algorithms/utils:graph",
+        "@parlayann//algorithms/utils:point_range",
+        "@parlayann//algorithms/utils:stats",
+        "@parlayann//algorithms/utils:types",
+        "@parlayann//algorithms/vamana:index",
     ],
 )
 
@@ -52,8 +52,8 @@ cc_test(
         "//testing/base/public:gunit_main",
         "@com_google_absl//absl/base:core_headers",
         "@com_github_graph_mining//in_memory:status_macros",
-        "//third_party/parlayann/utils:euclidian_point",
-        "//third_party/parlayann/utils:point_range",
+        "@parlayann//utils:euclidian_point",
+        "@parlayann//utils:point_range",
     ],
 )
 
@@ -80,10 +80,10 @@ cc_library(
         "@com_github_graph_mining//in_memory/clustering/dynamic/hac:dynamic_hac_cc_proto",
         "@com_github_graph_mining//in_memory/clustering/hac:parhac",
         "@com_github_graph_mining//in_memory/parallel:scheduler",
-        "//third_party/graph_mining/utils:timer",
+        "@com_github_graph_mining//utils:timer",
         "@parlaylib//parlay/include/parlay:parallel",
-        "//third_party/parlayann/utils:euclidian_point",
-        "//third_party/parlayann/utils:point_range",
+        "@parlayann//utils:euclidian_point",
+        "@parlayann//utils:point_range",
     ],
 )
 
@@ -114,10 +114,10 @@ cc_library(
         "@com_github_graph_mining//in_memory/clustering/dynamic/hac:dynamic_hac_cc_proto",
         "@com_github_graph_mining//in_memory/clustering/hac:parhac",
         "@com_github_graph_mining//in_memory/parallel:scheduler",
-        "//third_party/graph_mining/utils:timer",
+        "@com_github_graph_mining//utils:timer",
         "@parlaylib//parlay/include/parlay:parallel",
-        "//third_party/parlayann/utils:euclidian_point",
-        "//third_party/parlayann/utils:point_range",
+        "@parlayann//utils:euclidian_point",
+        "@parlayann//utils:point_range",
     ],
 )
 

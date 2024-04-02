@@ -118,9 +118,9 @@ cc_library(
         "@com_github_graph_mining//in_memory/clustering/hac:parhac",
         "@com_github_graph_mining//in_memory/parallel:scheduler",
         "@com_github_graph_mining//utils:timer",
-        "@parlaylib//parlay/include/parlay:parallel",
-        "@parlayann//utils:euclidian_point",
-        "@parlayann//utils:point_range",
+        "@parlaylib//parlay:parallel",
+        "@parlayann//algorithms/utils:euclidian_point",
+        "@parlayann//algorithms/utils:point_range",
     ],
 )
 

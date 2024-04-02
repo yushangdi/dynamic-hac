@@ -36,25 +36,25 @@
 #include <utility>
 #include <vector>
 
-#include "third_party/absl/flags/flag.h"
-#include "third_party/absl/log/check.h"
-#include "third_party/absl/log/log.h"
-#include "third_party/absl/status/status.h"
-#include "third_party/absl/strings/str_cat.h"
-#include "third_party/absl/strings/string_view.h"
-#include "approximate_hac_experiments/parclusterer_exp/benchmark/edge_feeder.h"
-#include "approximate_hac_experiments/parclusterer_exp/benchmark/io.h"
-#include "third_party/graph_mining/in_memory/clustering/config.proto.h"
-#include "third_party/graph_mining/in_memory/clustering/dendrogram.h"
-#include "third_party/graph_mining/in_memory/clustering/dynamic/hac/dynamic_hac.proto.h"
-#include "third_party/graph_mining/in_memory/clustering/dynamic/hac/hac.h"
-#include "third_party/graph_mining/in_memory/clustering/in_memory_clusterer.h"
-#include "third_party/graph_mining/in_memory/parallel/scheduler.h"
-#include "third_party/graph_mining/in_memory/status_macros.h"
-#include "third_party/graph_mining/utils/timer.h"
-#include "third_party/parlay/include/parlay/parallel.h"
-#include "third_party/parlayann/utils/euclidian_point.h"
-#include "third_party/parlayann/utils/point_range.h"
+#include "absl/flags/flag.h"
+#include "absl/log/check.h"
+#include "absl/log/log.h"
+#include "absl/status/status.h"
+#include "absl/strings/str_cat.h"
+#include "absl/strings/string_view.h"
+#include "parclusterer_exp/benchmark/edge_feeder.h"
+#include "parclusterer_exp/benchmark/io.h"
+#include "in_memory/clustering/config.pb.h"
+#include "in_memory/clustering/dendrogram.h"
+#include "in_memory/clustering/dynamic/hac/dynamic_hac.pb.h"
+#include "in_memory/clustering/dynamic/hac/hac.h"
+#include "in_memory/clustering/in_memory_clusterer.h"
+#include "in_memory/parallel/scheduler.h"
+#include "in_memory/status_macros.h"
+#include "utils/timer.h"
+#include "parlay/parallel.h"
+#include "algorithms/utils/euclidian_point.h"
+#include "algorithms/utils/point_range.h"
 
 ABSL_FLAG(std::string, input_data, "", "Input points in fvecs format");
 ABSL_FLAG(double, epsilon, 0.1, "epsilon");
@@ -97,10 +97,6 @@ using Point = Euclidian_Point<T>;
 using PointRange = PointRange<T, Point>;
 using indexType = unsigned int;
 using graph_mining::in_memory::Dendrogram;
-using research_graph::in_memory::ClustererConfig;
-using research_graph::in_memory::ParHacConfig;
-
-constexpr size_t kRowsPerShard = 50'000'000;
 
 DynamicHacConfig DynamicHacConfig(double epsilon, double weight_threshold) {
   class DynamicHacConfig dynamic_hac_config;
@@ -120,7 +116,7 @@ std::vector<std::size_t> InitialDegrees(std::vector<AdjacencyList>& edges) {
 
 absl::Status Main() {
   QCHECK(!absl::GetFlag(FLAGS_input_data).empty());
-  graph_mining::in_memory::ParallelSchedulerReference scheduler;
+  // graph_mining::in_memory::ParallelSchedulerReference scheduler;
   std::string input_data = absl::GetFlag(FLAGS_input_data);
   std::string output_clustering_path = absl::GetFlag(FLAGS_output_clustering);
   double epsilon = absl::GetFlag(FLAGS_epsilon);
@@ -195,7 +191,7 @@ absl::Status Main() {
   std::cout << "FixAdjList time: " << subtimer.GetSeconds() << " seconds\n";
   subtimer.Restart();
 
-  RETURN_IF_ERROR(dynamic_hac_clusterer.Insert(edges));
+  ASSIGN_OR_RETURN(const auto stats, dynamic_hac_clusterer.Insert(edges));
   std::cout << "Num. Rounds: " << dynamic_hac_clusterer.NumRounds() << "\n";
   ASSIGN_OR_RETURN(const auto& result,
                    dynamic_hac_clusterer.Dendrogram().ConvertToDendrogram());
@@ -215,10 +211,10 @@ absl::Status Main() {
     std::cout << "removing: " << current_index << "\n";
 
     subtimer.Restart();
-    RETURN_IF_ERROR(dynamic_hac_clusterer.Remove({current_index}));
+    ASSIGN_OR_RETURN(const auto stats, dynamic_hac_clusterer.Remove({current_index}));
     std::cout << "Clustering time: " << subtimer.GetSeconds() << " seconds\n";
     std::cout << "Num. Rounds: " << dynamic_hac_clusterer.NumRounds() << "\n";
-    dynamic_hac_clusterer.LogStats();
+    stats.LogStats();
 
     if (num_nodes_left % store_result_batch == 0 ||
         num_nodes_left == early_stop_index) {

@@ -49,3 +49,32 @@ python3 parclusterer_exp/benchmark/run_experiment.py \
 ```
 mkdir results/results_grove
 ```
+
+
+
+# instructions for imagenet data
+```bash
+pip install kaggle
+kaggle competitions download -c imagenet-object-localization-challenge
+curl https://sh.rustup.rs -sSf | sh
+. "$HOME/.cargo/env" 
+sudo apt-get install pkg-config openssl libssl-dev
+cargo install ripunzip
+```
+
+install [miniconda](https://docs.anaconda.com/free/miniconda/)
+
+```bash
+conda create -n "py37" python=3.7 
+conda activate py37
+conda install -c conda-forge tensorflow=1.14
+conda install -c conda-forge six
+conda install --yes --file requirements.txt # need to remove graphgrove
+
+# sample 50K images from 1000 classes
+./utils/sample_images.sh 
+# double check there are 50K images
+find /home/sy/imagenet/images/ -type d -maxdepth 1 | wc -l
+# embed
+python3 utils/embed_imagenet.py /home/sy/imagenet/images /home/sy/imagenet/
+```

@@ -5,8 +5,3 @@ umap-learn
 graphgrove
 numpy
 tqdm
-
-# For imagenet download
-six
-tensorflow==2.13.0
-kaggle

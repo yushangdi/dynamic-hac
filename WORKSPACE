@@ -47,17 +47,16 @@ git_repository(
     commit = "aaf5a5a1b84d35341776a8b1694640ea07c7c596"
 )
 
-# git_repository(
-#     name = "parlayann",
-#     remote = "git@github.com:yushangdi/ParlayANN.git",
-#     commit = "fd4a332de38cbef8c225bd3b259a0b45635b827e", # branch sync
-#     strip_prefix = "algorithms/",
-# )
-
-local_repository(
+git_repository(
     name = "parlayann",
-    path = "ParlayANN/",
+    remote = "git@github.com:yushangdi/ParlayANN.git",
+    commit = "67a0ad46c4728fcda1e7825a3786e4e5f07f43ed", # branch sync
 )
+
+# local_repository(
+#     name = "parlayann",
+#     path = "ParlayANN/",
+# )
 
 FARMHASH_COMMIT = "0d859a811870d10f53a594927d0d0b97573ad06d"
 FARMHASH_SHA256 = "18392cf0736e1d62ecbb8d695c31496b6507859e8c75541d7ad0ba092dc52115"

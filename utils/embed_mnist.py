@@ -30,6 +30,7 @@
 """Embeds MNIST data into two dimensions by UMAP."""
 
 from collections.abc import Sequence
+import os 
 
 from absl import app
 from absl import flags
@@ -56,6 +57,9 @@ def main(argv):
   reducer = umap.UMAP(random_state=42)
   embedding = reducer.fit_transform(mnist.data)
   labels = mnist.target.astype(int)
+  if not os.path.exists(output_dir):
+    print("creating directory, ", output_dir)
+    os.makedirs(output_dir)
   np.save(output_dir + "/mnist_embed.gt", labels)
   np.save(output_dir + "/mnist_embed.npy", embedding)
 

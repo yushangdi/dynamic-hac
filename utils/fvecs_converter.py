@@ -31,6 +31,7 @@
 
 from collections.abc import Sequence
 from io import StringIO
+import os
 
 from absl import app
 from absl import flags
@@ -97,6 +98,10 @@ def write_file(colossus_pathname, contents):
     colossus_pathname: The Colossus pathname of the output file to write to.
     contents: The contents to write to the output file.
   """
+  directory = os.path.dirname(colossus_pathname)
+  if not os.path.exists(directory):
+    print("creating directory, ", directory)
+    os.makedirs(directory)
   with open(colossus_pathname, "wb") as output_file:
     output_file.write(contents)
 

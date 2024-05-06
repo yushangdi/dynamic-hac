@@ -43,3 +43,5 @@ bazel-dynamic-hac
 data
 results
 parclusterer_exp/benchmark/__pycache__
+
+*.zip

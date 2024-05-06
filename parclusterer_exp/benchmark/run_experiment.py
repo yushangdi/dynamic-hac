@@ -79,7 +79,7 @@ _RUN_HAC = flags.DEFINE_bool(
 )
 
 _METHOD = flags.DEFINE_string(
-    "method", default="parhac", help="which hac to use."
+    "method", default="parhac", help="which hac to use. parhac or dynamic_hac"
 )
 
 _OUTPUT_KNN = flags.DEFINE_string(

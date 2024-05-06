@@ -48,8 +48,9 @@ from six.moves import urllib
 import tensorflow as tf
 from tqdm import tqdm
 
-flags = tf.compat.v1.flags
-FLAGS = flags.FLAGS
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+
+FLAGS = tf.app.flags.FLAGS
 
 # classify_image_graph_def.pb:
 #   Binary representation of the GraphDef protocol buffer.
@@ -58,16 +59,16 @@ FLAGS = flags.FLAGS
 # imagenet_2012_challenge_label_map_proto.pbtxt:
 #   Text representation of a protocol buffer mapping a label to synset ID.
 # Define flags
-flags.DEFINE_string('model_dir', '/tmp/imagenet',
-                    """Path to classify_image_graph_def.pb, """
-                    """imagenet_synset_to_human_label_map.txt, and """
-                    """imagenet_2012_challenge_label_map_proto.pbtxt.""")
+tf.app.flags.DEFINE_string(
+    'model_dir', '/tmp/imagenet',
+    """Path to classify_image_graph_def.pb, """
+    """imagenet_synset_to_human_label_map.txt, and """
+    """imagenet_2012_challenge_label_map_proto.pbtxt.""")
+tf.app.flags.DEFINE_string('image_file', '',
+                           """Absolute path to image file.""")
+tf.app.flags.DEFINE_integer('num_top_predictions', 5,
+                            """Display this many predictions.""")
 
-flags.DEFINE_string('image_file', '',
-                    """Absolute path to image file.""")
-
-flags.DEFINE_integer('num_top_predictions', 5,
-                     """Display this many predictions.""")
   
 # pylint: disable=line-too-long
 DATA_URL = 'http://download.tensorflow.org/models/image/imagenet/inception-2015-12-05.tgz'
@@ -216,7 +217,7 @@ def maybe_download_and_extract():
   tarfile.open(filepath, 'r:gz').extractall(dest_directory)
 
 
-def extract_features(list_images, sess):
+def extract_features(list_images, sess, input_dir):
     nb_features = 2048
     features = np.empty((len(list_images),nb_features))
     labels = []
@@ -229,6 +230,7 @@ def extract_features(list_images, sess):
     for ind, image in enumerate(list_images):
       if (ind%1000 == 0):
         print('Processing %s...' % (image))
+      image = os.path.join(input_dir, image)
       if not tf.gfile.Exists(image):
         tf.logging.fatal('File does not exist %s', image)
       try:
@@ -266,39 +268,40 @@ def main(_):
     # for d in devices:
     #   print(d.name)
 
-    with open(input_file) as open_file:
+    # with open(input_file) as open_file:
       # directory = '/iesl/data/imagenet/feats/%s' % os.path.basename(input_file)
-      directory = outdir # '/iesl/data/imagenet/lsvrc2012/%s' % os.path.basename(input_file)
-      if not os.path.exists(directory):
-        os.makedirs(directory)
+    directory = outdir # '/iesl/data/imagenet/lsvrc2012/%s' % os.path.basename(input_file)
+    if not os.path.exists(directory):
+      os.makedirs(directory)
 
-      for f in tqdm(open_file):
-        if re.search('jpeg|JPEG', f):
-          # batch.append(images_dir+f.strip())
-          batch.append(f.strip())
-          count += 1
-        if count == 40000:
+
+    for f in tqdm(os.listdir(input_file)):
+      if re.search('jpeg|JPEG', f):
+        # batch.append(images_dir+f.strip())
+        batch.append(f.strip())
+        count += 1
+      if count == 40000:
+        print('count = %s' % count)
+        batch = []
+      if count > 40000:
+        # print('count = %s' % count)
+        if count % batch_size == 0:
+          print('count-batch_size+1 = %s' % (count-batch_size+1))
           print('count = %s' % count)
+          print('BATCH START: %s ( count = %s )' % (f, count))
+          features, _ = extract_features(batch, sess, input_file)
+          pt_ids = [os.path.basename(f) for f in batch]
+          labels = [name.split('_')[0] for name in pt_ids]
+          label_feats = np.concatenate((np.array(pt_ids)[:, np.newaxis],
+                                        np.concatenate((np.array(labels)[:, np.newaxis],
+                                                        features), axis=1)), axis=1)
+          np.savetxt('%s/%d-%d.tsv' % (directory, count-batch_size+1, count),
+                      label_feats, fmt='%s',  delimiter='\t')
           batch = []
-        if count > 40000:
-          # print('count = %s' % count)
-          if count % batch_size == 0:
-            print('count-batch_size+1 = %s' % (count-batch_size+1))
-            print('count = %s' % count)
-            print('BATCH START: %s ( count = %s )' % (f, count))
-            features, _ = extract_features(batch, sess)
-            pt_ids = [os.path.basename(f) for f in batch]
-            labels = [name.split('_')[0] for name in pt_ids]
-            label_feats = np.concatenate((np.array(pt_ids)[:, np.newaxis],
-                                          np.concatenate((np.array(labels)[:, np.newaxis],
-                                                          features), axis=1)), axis=1)
-            np.savetxt('%s/%d-%d.tsv' % (directory, count-batch_size+1, count),
-                       label_feats, fmt='%s',  delimiter='\t')
-            batch = []
 
     if batch:
       # REPEAT TO EMPTY BATCH
-      features, _ = extract_features(batch, sess)
+      features, _ = extract_features(batch, sess, input_file)
       pt_ids = [os.path.basename(f) for f in batch]
       labels = [name.split('_')[0] for name in pt_ids]
       label_feats = np.concatenate((np.array(pt_ids)[:, np.newaxis],
@@ -314,4 +317,4 @@ def main(_):
 
 
 if __name__ == '__main__':
-  tf.compat.v1.app.run()
+  tf.app.run()

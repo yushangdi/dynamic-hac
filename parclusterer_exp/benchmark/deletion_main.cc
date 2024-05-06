@@ -42,6 +42,7 @@
 #include "absl/status/status.h"
 #include "absl/strings/str_cat.h"
 #include "absl/strings/string_view.h"
+#include "absl/flags/parse.h"
 #include "parclusterer_exp/benchmark/edge_feeder.h"
 #include "parclusterer_exp/benchmark/io.h"
 #include "in_memory/clustering/config.pb.h"
@@ -243,4 +244,7 @@ absl::Status Main() {
 }  // namespace in_memory
 }  // namespace graph_mining
 
-int main(int argc, char* argv[]) { QCHECK_OK(graph_mining::in_memory::Main()); }
+int main(int argc, char* argv[]) { 
+  absl::ParseCommandLine(argc, argv);
+  QCHECK_OK(graph_mining::in_memory::Main()); 
+}

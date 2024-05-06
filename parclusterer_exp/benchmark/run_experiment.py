@@ -31,6 +31,7 @@
 
 from collections.abc import Sequence
 import subprocess
+import os
 
 from absl import app
 from absl import flags
@@ -79,7 +80,7 @@ _RUN_HAC = flags.DEFINE_bool(
 )
 
 _METHOD = flags.DEFINE_string(
-    "method", default="parhac", help="which hac to use. parhac or dynamic_hac"
+    "method", default="parhac", help="which hac to use. parhac or dynamic_hac or dynamic_hac_deletion"
 )
 
 _OUTPUT_KNN = flags.DEFINE_string(
@@ -126,7 +127,9 @@ def run_experiment(
     config,
 ):
   """run experiments."""
-  base_dir = "bazel-bin/parclusterer_exp/benchmark/"
+  exp_root = os.environ.get('EXP_ROOT')
+  base_dir = exp_root + "/bazel-bin/parclusterer_exp/benchmark/"
+  os.environ["PARLAY_NUM_THREADS"] = "1"
   if _METHOD.value == "dynamic_hac_deletion":
     command = [
         base_dir + "deletion_main",
@@ -138,7 +141,6 @@ def run_experiment(
         "--epsilon=" + str(config.epsilon),
         "--weight_threshold=" + str(config.weight_threshold),
         "--store_batch_size=" + str(_STORE_BATCH_SIZE.value),
-        "--pbbs_num_workers=1",
         "--output_knn=" + _OUTPUT_KNN.value,
         "--use_output_knn=" + str(_USE_OUTPUT_KNN.value),
         "--early_stop_ratio=" + str(_FIRST_BATCH_RATIO.value),
@@ -154,7 +156,6 @@ def run_experiment(
         "--epsilon=" + str(config.epsilon),
         "--weight_threshold=" + str(config.weight_threshold),
         "--num_batch=" + str(config.num_batch),
-        "--pbbs_num_workers=1",
         "--method=" + _METHOD.value,
         "--output_knn=" + _OUTPUT_KNN.value,
         "--use_output_knn=" + str(_USE_OUTPUT_KNN.value),
@@ -165,6 +166,16 @@ def run_experiment(
   print("Command running:")
   print(" ".join(command), " > ", log_file_name)
   print()
+
+  directory = os.path.dirname(log_file_name)
+  if not os.path.exists(directory):
+    print("creating directory, ", directory)
+    os.makedirs(directory)
+
+  directory = os.path.dirname(output_clustering_dir)
+  if not os.path.exists(directory):
+    print("creating directory, ", directory)
+    os.makedirs(directory)
 
   with open(log_file_name, "w") as log_file:
     try:

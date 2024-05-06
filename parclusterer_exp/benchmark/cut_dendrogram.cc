@@ -77,5 +77,8 @@ PYBIND11_MODULE(cut_dendrogram, m) {
 
   m.def("ReadDendrogram", &graph_mining::in_memory::ReadDendrogramWrapper,
         "Reads a dendrogram from a file.", py::arg("dendrogram_file"));
+
+  py::class_<Dendrogram>(m, "Dendrogram");
+
 }
 }  // namespace

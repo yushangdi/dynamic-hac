@@ -26,19 +26,23 @@ kaggle competitions download -c imagenet-object-localization-challenge
 
 ## Run experiments
 ```bash
+bazel build parclusterer_exp/benchmark:cut_dendrogram
 bazel build parclusterer_exp/benchmark:parhac_main
 ```
 
 ```bash
+export PARLAY_NUM_THREADS=1
 # On iris with a single batch, static HAC
-bazel run benchmark:run_experiment -- \
---input_data=$EXP_ROOT/iris/iris.scale.permuted.fvecs \
---ground_truth=$EXP_ROOT/iris/iris.scale.permuted_label.bin \
---clustering=$EXP_ROOT/result/parhac/iris \
+python3 parclusterer_exp/benchmark/run_experiment.py \
+--input_data=$EXP_ROOT/data/iris/iris.scale.permuted.fvecs \
+--ground_truth=$EXP_ROOT/data/iris/iris.scale.permuted_label.bin \
+--clustering=$EXP_ROOT/results/parhac/iris \
 --output_file=$EXP_ROOT/results/logs_iris \
 --num_batch=1 --weight=0.3  \
 --method=parhac \
+--first_batch_ratio=1 \
 --output_knn=$EXP_ROOT/result/knn/iris \
+--store_batch_size=1
 ```
 
 # GraphGrove

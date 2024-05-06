@@ -31,14 +31,23 @@
 
 from collections.abc import Sequence
 import re
+import os
+import ctypes
+import sys
 
-import cut_dendrogram
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import sklearn.metrics.cluster as cluster_metrics
 import tqdm
 
+
+# # Load the shared library
+# exp_root = os.environ.get('EXP_ROOT')
+# cut_dendrogram = ctypes.CDLL(os.path.join(exp_root, "bazel-bin/parclusterer_exp/benchmark/cut_dendrogram.so"))
+
+sys.path.append("/home/sy/dynamic-hac/bazel-bin/parclusterer_exp/benchmark")
+import cut_dendrogram
 
 class Error(Exception):
   """Base class for exceptions in this module."""
@@ -143,17 +152,20 @@ def evaluate(
     best_num_cluster_nmi = 0
     for cut_threshold in [0.1, 0.001, 0.0001]:
       clustering = cut_dendrogram.CutDendrogramAt(dendrogram, cut_threshold)
+      clustering_flatten = np.zeros(index)
+      for cid, cluster in enumerate(clustering):
+        for i in cluster:
+          clustering_flatten[i] = cid
+
       nmi = cluster_metrics.normalized_mutual_info_score(
-          ground_truth[:index], clustering
+          ground_truth[:index], clustering_flatten
       )
       if nmi > best_nmi:
         best_nmi = nmi
-        num_cluster = len(np.unique(clustering))
+        num_cluster = len(clustering)
         best_num_cluster_nmi = num_cluster
-        best_num_clusters = len(np.unique(clustering))
     num_clusters.append(best_num_cluster_nmi)
     nmis.append(best_nmi)
-    num_clusters.append(best_num_clusters)
 
   df_dict = {
       'Index': indices,

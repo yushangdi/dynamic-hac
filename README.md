@@ -41,7 +41,7 @@ python3 parclusterer_exp/benchmark/run_experiment.py \
 --num_batch=1 --weight=0.3  \
 --method=parhac \
 --first_batch_ratio=1 \
---output_knn=$EXP_ROOT/result/knn/iris \
+--output_knn=$EXP_ROOT/results/knn/iris \
 --store_batch_size=1
 ```
 

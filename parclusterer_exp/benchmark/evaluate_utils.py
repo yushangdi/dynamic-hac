@@ -142,15 +142,17 @@ def evaluate(
     print('Warning: not all points are processed.')
   nmis = []
   num_clusters = []
+  thresholds_used = []
+  thresholds = [0.1, 0.3, 0.5, 0.7, 0.9, 1]
   for index in tqdm.tqdm(indices):
     dendrogram = cut_dendrogram.ReadDendrogram(
         clustering_file_base + '-' + str(index) + '-dendro.bin'
     )
     # TODO: find the best score
-    best_num_clusters = 0
+    best_threshold = 0
     best_nmi = 0
     best_num_cluster_nmi = 0
-    for cut_threshold in [0.1, 0.001, 0.0001]:
+    for cut_threshold in thresholds:
       clustering = cut_dendrogram.CutDendrogramAt(dendrogram, cut_threshold)
       clustering_flatten = np.zeros(index)
       for cid, cluster in enumerate(clustering):
@@ -162,15 +164,17 @@ def evaluate(
       )
       if nmi > best_nmi:
         best_nmi = nmi
-        num_cluster = len(clustering)
-        best_num_cluster_nmi = num_cluster
+        best_num_cluster_nmi = len(clustering)
+        best_threshold = cut_threshold
     num_clusters.append(best_num_cluster_nmi)
     nmis.append(best_nmi)
+    thresholds_used.append(best_threshold)
 
   df_dict = {
       'Index': indices,
       'NMI': nmis,
       'Num_Clusters': num_clusters,
+      'Thresholds': thresholds_used
   }
   df = pd.DataFrame(df_dict)
   df.to_csv(output_file + '_nmi.csv')

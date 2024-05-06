@@ -28,6 +28,7 @@ build --cxxopt=-DUSEMALLOC
 build --cxxopt=-DPARLAY_USE_STD_ALLOC
 build --cxxopt=-pthread      # necessary for homegrown scheduler
 build --cxxopt=-march=native
+build --copt=-DABSL_MIN_LOG_LEVEL=2  # remove verbose logging
 build -c opt
 
 # C++ warning flags.

@@ -167,15 +167,12 @@ def run_experiment(
   print(" ".join(command), " > ", log_file_name)
   print()
 
-  directory = os.path.dirname(log_file_name)
-  if not os.path.exists(directory):
-    print("creating directory, ", directory)
-    os.makedirs(directory)
+  create_dirs = [os.path.dirname(f) for f in [log_file_name, output_clustering_dir, _OUTPUT_KNN.value]]
 
-  directory = os.path.dirname(output_clustering_dir)
-  if not os.path.exists(directory):
-    print("creating directory, ", directory)
-    os.makedirs(directory)
+  for directory in create_dirs:
+    if not os.path.exists(directory):
+      print("creating directory, ", directory)
+      os.makedirs(directory)
 
   with open(log_file_name, "w") as log_file:
     try:

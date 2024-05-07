@@ -12,37 +12,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#!/bin/bash
+export EXP_ROOT=$(pwd) # set EXP_ROOT to current directory
+export PARLAY_NUM_THREADS=1
 
-cd parclusterer_exp
-export EXP_ROOT=`pwd`
-
-# use_output_knn="False"
 weight=0.0001
-
-# dataset="iris"
-# num_batch=2
-# use_output_knn="True"
-
 datasets=("mnist") #mnist "aloi"    "imagenet" "ilsvrc_small"
 num_batches=(70000) #70000 108000    100000 50000
 
 first_batch="0.014"
 epsilon="0.1"
-
+k=50
 
 for i in {0..0}; do
   dataset=${datasets[i]}
   num_batch=${num_batches[i]}
   store_batch_size=$((num_batch / 100))
 
-  input_data="benchmark/${dataset}/${dataset}.scale.permuted.fvecs"
-  ground_truth="benchmark/${dataset}/${dataset}.scale.permuted_label.csv"
-  clustering="benchmark/result/dynamic_hac/${dataset}"
-  output_file="$EXP_ROOT/benchmark/results_dyn/${dataset}"
-  k=50
+  input_data="$EXP_ROOT/data/${dataset}/${dataset}.scale.permuted.fvecs"
+  ground_truth="$EXP_ROOT/data/${dataset}/${dataset}.scale.permuted_label.bin"
+  clustering="$EXP_ROOT/results/dynamic_hac/${dataset}"
+  output_file="$EXP_ROOT/results/results_dyn/${dataset}"
 
-  command="bazel run benchmark:run_experiment -- \
+  command="python3 parclusterer_exp/benchmark/run_experiment.py \
   --input_data=${input_data} \
   --ground_truth=${ground_truth} \
   --clustering=${clustering} \
@@ -54,7 +45,8 @@ for i in {0..0}; do
   --method=dynamic_hac \
   --first_batch_ratio=${first_batch}"
 
-  bazel build //experimental/users/shangdi/parclusterer_exp/benchmark:parhac_main
+  bazel build //parclusterer_exp/benchmark:cut_dendrogram
+  bazel build //parclusterer_exp/benchmark:parhac_main
 
   mkdir -p ${output_file}
 

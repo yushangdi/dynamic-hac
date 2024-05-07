@@ -170,7 +170,7 @@ def run_experiment(
   create_dirs = [os.path.dirname(f) for f in [log_file_name, output_clustering_dir, _OUTPUT_KNN.value]]
 
   for directory in create_dirs:
-    if not os.path.exists(directory):
+    if directory and not os.path.exists(directory):
       print("creating directory, ", directory)
       os.makedirs(directory)
 

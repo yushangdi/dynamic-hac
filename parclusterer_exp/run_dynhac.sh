@@ -14,15 +14,14 @@
 
 #!/bin/bash
 
-cd parclusterer_exp
-export EXP_ROOT=`pwd`
+export EXP_ROOT=$(pwd) # set EXP_ROOT to current directory
+export PARLAY_NUM_THREADS=1
 
 # use_output_knn="False"
+# mnist
 weight=0.0001
-
-# dataset="iris"
-# num_batch=2
-# use_output_knn="True"
+# aloi, "ilsvrc_small"
+# weight=0.01
 
 datasets=("mnist") #mnist "aloi"    "imagenet" "ilsvrc_small"
 num_batches=(70000) #70000 108000    100000 50000

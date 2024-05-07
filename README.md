@@ -45,6 +45,7 @@ python3 parclusterer_exp/benchmark/run_experiment.py \
 --store_batch_size=1
 
 ./parclusterer_exp/run_hac.sh 
+./parclusterer_exp/run_dynhac_full.sh 
 ```
 
 # GraphGrove

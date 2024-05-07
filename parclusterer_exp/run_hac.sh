@@ -12,24 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-
-
-
-# dataset="iris"
-# num_batch=2
-# use_output_knn="True"
-
 export EXP_ROOT=$(pwd) # set EXP_ROOT to current directory
 export PARLAY_NUM_THREADS=1
 
-weight=0.0001
+# mnist
+# weight=0.0001
+# aloi, "ilsvrc_small"
+weight=0.01
 k=50
 num_batch=100
-use_output_knn="True"
-run_hac="False"
+use_output_knn="False"
+run_hac="True"
 
-datasets=("mnist") #mnist "aloi" "imagenet" "ilsvrc_small"
+datasets=("ilsvrc_small") #mnist "aloi" "ilsvrc_small"
 
 for dataset in ${datasets[@]}
 do

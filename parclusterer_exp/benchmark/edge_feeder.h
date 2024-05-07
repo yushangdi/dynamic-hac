@@ -185,13 +185,27 @@ class EdgeFeeder {
       auto neighbors = (beam_search<Point, PointRangeT, indexType>(
                             points_[i], G_, points_, start_point, QP))
                            .first.first;
-      CHECK_GE(neighbors.size(), QP.k) << "id: " << i;
+      // CHECK_GE(neighbors.size(), QP.k) << "id: " << i;
       knn_[i].resize(QP.k);
-      for (indexType j = 0; j < QP.k; j++) {
-        const auto neighbor = neighbors[j].first;
-        const auto distance = points_[i].distance(points_[neighbor]);
-        knn_[i][j] = {neighbor, sqrt(distance)};
+      // Bruteforce compute instead
+      if (neighbors.size() < QP.k){
+        neighbors.resize(QP.k);
+        std::vector<std::pair<float, NodeId>> dists(end);
+        for (size_t j = 0; j < end; j++) {
+          dists[j] = std::make_pair(points_[i].distance(points_[j]), j);
+        }
+        std::nth_element(dists.begin(), dists.begin() + QP.k, dists.end());
+        for (size_t j = 0; j < QP.k; j++) {
+          knn_[i][j] = {dists[j].second, sqrt(dists[j].first)};
+        }
+      }else{
+        for (indexType j = 0; j < QP.k; j++) {
+          const auto neighbor = neighbors[j].first;
+          const auto distance = points_[i].distance(points_[neighbor]);
+          knn_[i][j] = {neighbor, sqrt(distance)};
+        }
       }
+
     });
     return Edges(start, end);
   }

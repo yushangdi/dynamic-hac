@@ -143,7 +143,9 @@ def evaluate(
   nmis = []
   num_clusters = []
   thresholds_used = []
-  thresholds = [0.0001, 0.0005, 0.01, 0.1, 0.3, 0.5, 0.7, 0.9, 1]
+  thresholds = list(np.logspace(-4, -1, 20))
+  thresholds += list(np.logspace(-1, 0, 20))
+  print(thresholds)
   for index in tqdm.tqdm(indices):
     dendrogram = cut_dendrogram.ReadDendrogram(
         clustering_file_base + '-' + str(index) + '-dendro.bin'

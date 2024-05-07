@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#!/bin/bash
+
 
 
 
@@ -20,22 +20,28 @@
 # num_batch=2
 # use_output_knn="True"
 
+export EXP_ROOT=$(pwd) # set EXP_ROOT to current directory
+export PARLAY_NUM_THREADS=1
+
 weight=0.0001
 k=50
 num_batch=100
 use_output_knn="True"
+run_hac="False"
 
 datasets=("mnist") #mnist "aloi" "imagenet" "ilsvrc_small"
 
 for dataset in ${datasets[@]}
 do
-  input_data="benchmark/${dataset}/${dataset}.scale.permuted.fvecs"
-  ground_truth="benchmark/${dataset}/${dataset}.scale.permuted_label.csv"
-  clustering="benchmark/result/parhac/${dataset}"
-  output_file="$EXP_ROOT/benchmark/results_hac/${dataset}"
-  output_knn="benchmark/result/knn/${dataset}/knn_${dataset}"
+  input_data="$EXP_ROOT/data/${dataset}/${dataset}.scale.permuted.fvecs"
+  ground_truth="$EXP_ROOT/data/${dataset}/${dataset}.scale.permuted_label.bin"
+  clustering="$EXP_ROOT/results/parhac/${dataset}"
+  output_file="$EXP_ROOT/results/results_hac/${dataset}"
+  output_knn="$EXP_ROOT/results/knn/${dataset}/knn_${dataset}"
 
-  command="bazel run benchmark:run_experiment -- \
+  command="python3 parclusterer_exp/benchmark/run_experiment.py \
+  --method=parhac \
+  --run_hac=${run_hac} \
   --input_data=${input_data} \
   --ground_truth=${ground_truth} \
   --clustering=${clustering} \
@@ -47,7 +53,8 @@ do
   --use_output_knn=${use_output_knn}\
   --first_batch_ratio=0"
 
-  bazel build //benchmark:parhac_main
+  bazel build //parclusterer_exp/benchmark:cut_dendrogram
+  bazel build //parclusterer_exp/benchmark:parhac_main
 
   mkdir -p ${output_file}
 

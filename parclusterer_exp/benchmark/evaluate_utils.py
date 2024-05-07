@@ -110,9 +110,9 @@ def plot(
   plt.clf()
   plt.plot(indices, nmis)
   plt.scatter(indices, nmis)
-  plt.title('Clustering ARI')
+  plt.title('Clustering NMI')
   plt.xlabel('# Nodes')
-  plt.ylabel('ARI')
+  plt.ylabel('NMI')
   plt.tight_layout()
   plt.savefig(output_file + '_nmis.png', format='png')
 
@@ -143,7 +143,7 @@ def evaluate(
   nmis = []
   num_clusters = []
   thresholds_used = []
-  thresholds = [0.1, 0.3, 0.5, 0.7, 0.9, 1]
+  thresholds = [0.0001, 0.0005, 0.01, 0.1, 0.3, 0.5, 0.7, 0.9, 1]
   for index in tqdm.tqdm(indices):
     dendrogram = cut_dendrogram.ReadDendrogram(
         clustering_file_base + '-' + str(index) + '-dendro.bin'

@@ -43,6 +43,8 @@ python3 parclusterer_exp/benchmark/run_experiment.py \
 --first_batch_ratio=1 \
 --output_knn=$EXP_ROOT/results/knn/iris \
 --store_batch_size=1
+
+./parclusterer_exp/run_hac.sh 
 ```
 
 # GraphGrove

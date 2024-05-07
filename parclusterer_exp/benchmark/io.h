@@ -262,9 +262,7 @@ absl::Status StoreEdges(
     // Write the buffer to file in one go
     const std::string filename =
         absl::StrCat(knn_output_file, "_", indices[batch_index], ".bin");
-    if (writeToFile(filename, buffer)) {
-      return absl::OkStatus();
-    } else {
+    if (!writeToFile(filename, buffer)) {
       return absl::InternalError(
           absl::StrCat("Failed to write to file, ", filename));
     }

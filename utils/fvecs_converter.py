@@ -179,9 +179,10 @@ def store(input_file, output_file, dataset, permute=True):
     points = preprocessing.MinMaxScaler().fit_transform(points)
     labels = cov_type.target
     points = np.hstack((labels[:, None], points)).astype(np.float32)
-  elif dataset == "imagenet" or dataset == "ilsvrc":
-    with open(input_file, "r") as f:
-      points = np.loadtxt(f, delimiter="\t").astype(np.float32)
+  elif dataset == "ilsvrc_small":
+    # with open(input_file, "r") as f:
+    #   points = np.loadtxt(f, delimiter="\t").astype(np.float32)
+    points = np.load(input_file).astype(np.float32)
     points = points[:, 1:]
   elif dataset == "aloi":
     points = load_data_to_numpy_array(input_file).astype(np.float32)

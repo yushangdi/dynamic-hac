@@ -48,7 +48,7 @@ from six.moves import urllib
 import tensorflow as tf
 from tqdm import tqdm
 
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '5'
 
 FLAGS = tf.app.flags.FLAGS
 
@@ -280,24 +280,24 @@ def main(_):
         # batch.append(images_dir+f.strip())
         batch.append(f.strip())
         count += 1
-      if count == 40000:
-        print('count = %s' % count)
-        batch = []
-      if count > 40000:
+      # if count == 40000:
+      #   print('count = %s' % count)
+      #   batch = []
+      # if count > 40000:
         # print('count = %s' % count)
-        if count % batch_size == 0:
-          print('count-batch_size+1 = %s' % (count-batch_size+1))
-          print('count = %s' % count)
-          print('BATCH START: %s ( count = %s )' % (f, count))
-          features, _ = extract_features(batch, sess, input_file)
-          pt_ids = [os.path.basename(f) for f in batch]
-          labels = [name.split('_')[0] for name in pt_ids]
-          label_feats = np.concatenate((np.array(pt_ids)[:, np.newaxis],
-                                        np.concatenate((np.array(labels)[:, np.newaxis],
-                                                        features), axis=1)), axis=1)
-          np.savetxt('%s/%d-%d.tsv' % (directory, count-batch_size+1, count),
-                      label_feats, fmt='%s',  delimiter='\t')
-          batch = []
+      if count % batch_size == 0:
+        print('count-batch_size+1 = %s' % (count-batch_size+1))
+        print('count = %s' % count)
+        print('BATCH START: %s ( count = %s )' % (f, count))
+        features, _ = extract_features(batch, sess, input_file)
+        pt_ids = [os.path.basename(f) for f in batch]
+        labels = [name.split('_')[0] for name in pt_ids]
+        label_feats = np.concatenate((np.array(pt_ids)[:, np.newaxis],
+                                      np.concatenate((np.array(labels)[:, np.newaxis],
+                                                      features), axis=1)), axis=1)
+        np.savetxt('%s/%d-%d.tsv' % (directory, count-batch_size+1, count),
+                    label_feats, fmt='%s',  delimiter='\t')
+        batch = []
 
     if batch:
       # REPEAT TO EMPTY BATCH
@@ -318,3 +318,35 @@ def main(_):
 
 if __name__ == '__main__':
   tf.app.run()
+  outdir = sys.argv[2]
+  data = None
+  for i in range(1, 6):
+    label_feats_loaded = np.loadtxt('%s/%d-%d.tsv' % (outdir, 1 + (i-1) * 1e4, i*1e4), dtype=str, delimiter='\t')
+    if data is None:
+        data = label_feats_loaded
+    else:
+        data = np.concatenate((data, label_feats_loaded))
+
+
+  # Verify by printing the shape or part of the array
+  print(data.shape)
+  print(data[:5])  # Print first 5 entries to check
+  np.save(outdir + "/ilsvrc_small_str.npy", data)
+
+  for col in [0, 1]:
+    # Extract the second column (category labels)
+    categories = data[:, col]
+
+    # Create a mapping from category label to unique integer
+    unique_categories = np.unique(categories)
+    category_to_int = {category: idx for idx, category in enumerate(unique_categories)}
+
+    # Replace categories in the original data with their corresponding integer codes
+    for i in range(data.shape[0]):
+        data[i, col] = category_to_int[data[i, col]]
+
+  print(len(unique_categories))
+  print(data.shape)
+  print(data[:5])  # Print first 5 entries to check
+  np.save(outdir + "/ilsvrc_small.npy", data)
+

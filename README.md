@@ -21,7 +21,7 @@ rm aloi.scale.raw
 rm aloi.scale.bz2
 
 # Imagenet
-kaggle competitions download -c imagenet-object-localization-challenge
+python3 utils/fvecs_converter.py --data_file=$EXP_ROOT/data/ilsvrc_small/ilsvrc_small.npy --output_file=$EXP_ROOT/data/ilsvrc_small/ilsvrc_small.scale.permuted --data=ilsvrc_small
 ```
 
 ## Run experiments

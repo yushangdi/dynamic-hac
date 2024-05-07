@@ -14,23 +14,29 @@
 
 #!/bin/bash
 
-# dataset="mnist"
+export EXP_ROOT=$(pwd) # set EXP_ROOT to current directory
+
+dataset="mnist"
+ratio=0
+
 # dataset="test"
 # dataset="aloi"
 # dataset="imagenet"
-dataset="ilsvrc_small"
+# dataset="ilsvrc_small"
 # dataset="iris"
 
-ratio=0.99
+# ratio=0.99
 
-base_dir="parclusterer_exp"
+base_dir="$EXP_ROOT/results/"
 
-command="bazel run -c opt //experimental/users/shangdi/parclusterer_exp/benchmark:grinch_main -- \
---log_file=${base_dir}/benchmark/
---dataset=${dataset} --eval_index_ratio=${ratio}"
+command="python3 parclusterer_exp/benchmark/grinch_main.py \
+--log_file=$EXP_ROOT/
+--dataset=${dataset} --eval_index_ratio=${ratio} --batch_num=100"
 
-mkdir -p ${base_dir}/benchmark/grinch_insertion
-mkdir -p ${base_dir}/benchmark/grinch_deletion
+mkdir -p ${base_dir}/grinch_insertion
+mkdir -p ${base_dir}/grinch_deletion
+
+bazel build //parclusterer_exp/benchmark:cut_dendrogram
 
 echo $command  # Print the command for verification
 eval $command  # Execute the command

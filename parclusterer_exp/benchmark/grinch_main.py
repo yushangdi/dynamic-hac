@@ -52,7 +52,7 @@ _EVAL_INDEX_RATIO = flags.DEFINE_float(
     "only store ARIs for index [x*n, n]. Deletion stops at this index.",
 )
 
-base_dir = "parclusterer_exp/benchmark/"
+base_dir = "./"
 
 
 def fvecs_read(f):
@@ -109,7 +109,7 @@ def main(argv):
   dataset = dataset / np.linalg.norm(dataset, axis=-1, keepdims=True)
 
   ground_truth_file = (
-      f"{base_dir}/data/{dataset_name}/{dataset_name}.scale.permuted_label.csv"
+      f"{base_dir}/data/{dataset_name}/{dataset_name}.scale.permuted_label.bin"
   )
   ground_truth = [1, 2, 3, 4, 5, 6]
   if dataset_name != "test":
@@ -139,15 +139,15 @@ def main(argv):
   nmis_num_clusters = []
 
   with open(
-      output_filename + f"results_grinch/{dataset_name}_{batch_num}.log",
+      output_filename + f"results/grinch_insertion/{dataset_name}_{batch_num}.log",
       "w",
       buffering=1,
   ) as output_file:
 
-    for i in tqdm.tqdm(range(gr.num_points), "grinch_insertion"):
-      _, knn_time = gr.stats_string()
+    for i in tqdm.tqdm(range(n), "grinch_insertion"):
       s = time.time()
       gr.insert(i)
+      _, knn_time = gr.stats_string()
       round_time = time.time() - s
 
       # Append the statements to the output string
@@ -185,12 +185,12 @@ def main(argv):
       "NMI_Num_Clusters": nmis_num_clusters,
   }
   df = pd.DataFrame(df_dict)
-  df.to_csv(base_dir + f"results_grinch/{dataset_name}_{batch_num}_nmi.csv")
+  df.to_csv(base_dir + f"results/grinch_insertion/{dataset_name}_{batch_num}_nmi.csv")
   evaluate_utils.plot(
       insertion_stored_indices,
-      insertion_aris,
+      insertion_nmis,
       num_clusters,
-      base_dir + f"results_grinch/{dataset_name}_{batch_num}",
+      base_dir + f"results/grinch_insertion/{dataset_name}_{batch_num}",
   )
 
   time_dict = {
@@ -198,7 +198,7 @@ def main(argv):
       "Round": insertion_times,
   }
   df = pd.DataFrame(time_dict)
-  df.to_csv(base_dir + f"results_grinch/{dataset_name}_{batch_num}_time.csv")
+  df.to_csv(base_dir + f"results/grinch_insertion/{dataset_name}_{batch_num}_time.csv")
 
   gr.clear_stats()
   flush_string = ""
@@ -211,17 +211,17 @@ def main(argv):
   nmis_num_clusters = []
   with open(
       output_filename
-      + f"results_grinch_deletion/{dataset_name}_{batch_num}.log",
+      + f"results/grinch_deletion/{dataset_name}_{batch_num}.log",
       "w",
       buffering=1,
   ) as output_file:
 
     for i in tqdm.tqdm(
-        range(gr.num_points - 1, eval_index, -1), "grinch_deletion"
+        range(n - 1, eval_index, -1), "grinch_deletion"
     ):
-      _, knn_time = gr.stats_string()
       s = time.time()
       gr.delete_point(i)
+      _, knn_time = gr.stats_string()
       round_time = time.time() - s
       flush_string = append_to_string(
           flush_string, "====== index: " + str(n - i)
@@ -259,13 +259,13 @@ def main(argv):
   }
   df = pd.DataFrame(df_dict)
   df.to_csv(
-      base_dir + f"results_grinch_deletion/{dataset_name}_{batch_num}_nmi.csv"
+      base_dir + f"results/grinch_deletion/{dataset_name}_{batch_num}_nmi.csv"
   )
   evaluate_utils.plot(
       deletion_stored_indices,
-      deletion_aris,
+      deletion_nmis,
       num_clusters,
-      base_dir + f"results_grinch_deletion/{dataset_name}_{batch_num}",
+      base_dir + f"results/grinch_deletion/{dataset_name}_{batch_num}",
   )
 
   time_dict = {
@@ -274,7 +274,7 @@ def main(argv):
   }
   df = pd.DataFrame(time_dict)
   df.to_csv(
-      base_dir + f"results_grinch_deletion/{dataset_name}_{batch_num}_time.csv"
+      base_dir + f"results/grinch_deletion/{dataset_name}_{batch_num}_time.csv"
   )
 
 

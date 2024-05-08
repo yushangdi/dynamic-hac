@@ -14,57 +14,55 @@
 
 #!/bin/bash
 
-cd parclusterer_exp
-export EXP_ROOT=`pwd`
+export EXP_ROOT=$(pwd) # set EXP_ROOT to current directory
+export PARLAY_NUM_THREADS=1
 
 use_output_knn="True"
-weight=0.0001
 first_batch_ratio=0.99
-epsilon=0
-# dataset="iris"
-# num_batch=2
-# use_output_knn="True"
 
-datasets=("aloi") #mnist    "aloi" "imagenet" "ilsvrc_small"
-num_batches=(108000) #70000    108000 100000 50000
+datasets=("mnist" "aloi" "ilsvrc_small") #mnist   "imagenet" 
+num_batches=(70000 108000 50000) #70000     100000 
+weights=(0.0001 0.01 0.01)
+k=50
 
-# datasets=("iris")
-# num_batches=(3) ## not used in the code now, deletion 1 point at a time
+first_batch="0.99"
+epsilons=("0.1" "1" "0")
 
-# datasets=("mnist")
-# num_batches=(70000) ## not used in the code now, deletion 1 point at a time
+bazel build //parclusterer_exp/benchmark:cut_dendrogram
+bazel build //parclusterer_exp/benchmark:deletion_main
 
-## change loop
-for i in {0..0}; do
+
+for i in {0..2}; do
   dataset=${datasets[i]}
   num_batch=${num_batches[i]}
+  weight=${weights[i]}
   store_batch_size=$((num_batch / 1000))
 
-  input_data="benchmark/${dataset}/${dataset}.scale.permuted.fvecs"
-  ground_truth="benchmark/${dataset}/${dataset}.scale.permuted_label.csv"
-  clustering="benchmark/result/dynamic_hac_deletion_tail/${dataset}"
-  output_file="$EXP_ROOT/benchmark/results_dyn_deletion/tail_${dataset}"
-  output_knn="benchmark/result/knn/${dataset}/knn_${dataset}"
-  k=50
-
-  command="bazel run benchmark:run_experiment -- \
-  --input_data=${input_data} \
-  --ground_truth=${ground_truth} \
-  --clustering=${clustering} \
-  --output_file=${output_file} \
-  --num_batch=${num_batch} \
-  --store_batch_size=${store_batch_size} \
-  --k=${k} \
-  --weight=${weight} --epsilon=${epsilon} \
-  --use_output_knn=${use_output_knn} \
-  --output_knn=${output_knn} \
-  --first_batch_ratio=${first_batch_ratio} \
-  --method=dynamic_hac_deletion"
-
-  bazel build //experimental/users/shangdi/parclusterer_exp/benchmark:deletion_main
+  input_data="$EXP_ROOT/data/${dataset}/${dataset}.scale.permuted.fvecs"
+  ground_truth="$EXP_ROOT/data/${dataset}/${dataset}.scale.permuted_label.csv"
+  clustering="$EXP_ROOT/results/dynamic_hac_deletion_tail/${dataset}"
+  output_file="$EXP_ROOT/results/results_dyn_deletion/tail_${dataset}"
+  output_knn="$EXP_ROOT/results/knn/${dataset}/knn_${dataset}"
 
   mkdir -p ${output_file}
 
-  echo $command  # Print the command for verification
-  eval $command  # Execute the command
+  for epsilon in ${epsilons[@]}; do
+    command="python3 parclusterer_exp/benchmark/run_experiment.py \
+    --input_data=${input_data} \
+    --ground_truth=${ground_truth} \
+    --clustering=${clustering} \
+    --output_file=${output_file} \
+    --num_batch=${num_batch} \
+    --store_batch_size=${store_batch_size} \
+    --k=${k} \
+    --weight=${weight} --epsilon=${epsilon} \
+    --use_output_knn=${use_output_knn} \
+    --output_knn=${output_knn} \
+    --first_batch_ratio=${first_batch_ratio} \
+    --method=dynamic_hac_deletion"
+
+    echo $command  # Print the command for verification
+    eval $command  # Execute the command
+    echo
+    done 
 done

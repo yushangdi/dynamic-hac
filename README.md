@@ -47,6 +47,7 @@ python3 parclusterer_exp/benchmark/run_experiment.py \
 ./parclusterer_exp/run_hac.sh 
 ./parclusterer_exp/run_dynhac_full.sh 
 ./parclusterer_exp/run_dynhac.sh 
+./parclusterer_exp/run_deletion.sh 
 ```
 
 # GRINCH
@@ -57,7 +58,6 @@ python3 parclusterer_exp/benchmark/run_experiment.py \
 ```
 
 # GraphGrove
-
 
 Install from source first: https://github.com/nmonath/graphgrove/tree/main. Use python version compatible with cut_dendrogram. >=3.9. e.g. `conda install python=3.12`.
 
@@ -98,4 +98,13 @@ conda install --yes --file requirements.txt
 find /home/sy/imagenet/images/ -type d -maxdepth 1 | wc -l
 # embed
 python3 utils/embed_imagenet.py /home/sy/imagenet/images /home/sy/imagenet/
+```
+
+
+
+## Plotting
+
+```bash
+mkdir plots
+python3 plot/plot_main.py
 ```

@@ -40,7 +40,7 @@ import pandas as pd
 import plot_io
 import seaborn as sns
 
-base_dir = plot_io.base_dir
+base_dir = "plots/"
 
 
 def plot_quality(
@@ -680,18 +680,18 @@ def plot_bars_epsilon():
 def main(argv):
   if len(argv) > 1:
     raise app.UsageError("Too many command-line arguments.")
-  plot_mnist()
-  plot_tail_time_quality("aloi", 108000)  # DONE
-  plot_tail_time_quality("ilsvrc_small", 50000)  # DONE
-  plot_num_dirty_edges()  # DONE
-  plot_num_rounds()  # DONE
-  for mode in [True, False]:  # DONE
-    plot_epsilons_single("mnist", 70000, mode)
-    plot_epsilons_single("aloi", 108000, mode)
-    plot_epsilons_single("ilsvrc_small", 50000, mode)
+  # plot_mnist()
+  # plot_tail_time_quality("aloi", 108000)
+  # plot_tail_time_quality("ilsvrc_small", 50000)
+  plot_num_dirty_edges()
+  plot_num_rounds()
+  # for mode in [True, False]:
+  #   plot_epsilons_single("mnist", 70000, mode)
+  #   plot_epsilons_single("aloi", 108000, mode)
+  #   plot_epsilons_single("ilsvrc_small", 50000, mode)
 
-  plot_bars()  # DONE
-  plot_bars_epsilon()  # DONE
+  # plot_bars()
+  # plot_bars_epsilon()
 
 
 if __name__ == "__main__":

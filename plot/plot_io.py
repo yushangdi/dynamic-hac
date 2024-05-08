@@ -35,9 +35,8 @@ import re
 import numpy as np
 import pandas as pd
 
-base_dir = "parclusterer_exp/benchmark/"
+base_dir = "results/"
 epsilon = 0.1
-threshold = 0.0001
 
 
 def ComputeSlidingWindow(df, col, window_size=100):
@@ -48,6 +47,9 @@ def ComputeSlidingWindow(df, col, window_size=100):
 
 def get_hac_time(dataset):
   hac_batch_num = 100
+  threshold = 0.01
+  if dataset == "mnist":
+    threshold = 0.0001
   hac_time = (
       base_dir
       + "results_hac/"
@@ -59,6 +61,9 @@ def get_hac_time(dataset):
 
 def get_hac_quality(dataset):
   hac_batch_num = 100
+  threshold = 0.01
+  if dataset == "mnist":
+    threshold = 0.0001
   hac_quality = (
       base_dir
       + "results_hac/"
@@ -134,28 +139,34 @@ def get_grove_dfs(dataset):
 
 
 def get_tail_time(dataset, epsilon, n, insertion):
+  threshold = 0.01
+  if dataset == "mnist":
+    threshold = 0.0001
   if insertion:
     time_file = (
         base_dir
         + f"results_dyn/tail_{dataset}/"
-        + f"fig_eps_{epsilon}_weight_0.0001_{n}.png_running_times.csv"
+        + f"fig_eps_{epsilon}_weight_{threshold}_{n}.png_running_times.csv"
     )
   else:
     time_file = (
         base_dir
         + f"results_dyn_deletion/tail_{dataset}/"
-        + f"fig_eps_{epsilon}_weight_0.0001_{n}.png_running_times.csv"
+        + f"fig_eps_{epsilon}_weight_{threshold}_{n}.png_running_times.csv"
     )
   df_time = pd.read_csv(time_file)
   return df_time
 
 
 def get_tail_quality(dataset, epsilon, n, insertion):
+  threshold = 0.01
+  if dataset == "mnist":
+    threshold = 0.0001
   if insertion:
     quality_file = (
         base_dir
         + f"results_dyn/tail_{dataset}/"
-        + f"fig_eps_{epsilon}_weight_0.0001_{n}_nmi.csv"
+        + f"fig_eps_{epsilon}_weight_{threshold}_{n}_nmi.csv"
     )
     df_quality = pd.read_csv(quality_file)
     return df_quality
@@ -163,35 +174,41 @@ def get_tail_quality(dataset, epsilon, n, insertion):
     quality_file = (
         base_dir
         + f"results_dyn_deletion/tail_{dataset}/"
-        + f"fig_eps_{epsilon}_weight_0.0001_{n}_nmi.csv"
+        + f"fig_eps_{epsilon}_weight_{threshold}_{n}_nmi.csv"
     )
     df_quality = pd.read_csv(quality_file)
     return df_quality
 
 
 def get_full_time(dataset, epsilon, n, insertion):
+  threshold = 0.01
+  if dataset == "mnist":
+    threshold = 0.0001
   if insertion:
     time_file = (
         base_dir
         + f"results_dyn/{dataset}/"
-        + f"fig_eps_{epsilon}_weight_0.0001_{n}.png_running_times.csv"
+        + f"fig_eps_{epsilon}_weight_{threshold}_{n}.png_running_times.csv"
     )
   else:
     time_file = (
         base_dir
         + f"results_dyn_deletion/{dataset}/"
-        + f"fig_eps_{epsilon}_weight_0.0001_{n}.png_running_times.csv"
+        + f"fig_eps_{epsilon}_weight_{threshold}_{n}.png_running_times.csv"
     )
   df_time = pd.read_csv(time_file)
   return df_time
 
 
 def get_full_quality(dataset, epsilon, n, insertion):
+  threshold = 0.01
+  if dataset == "mnist":
+    threshold = 0.0001
   if insertion:
     quality_file = (
         base_dir
         + f"results_dyn/{dataset}/"
-        + f"fig_eps_{epsilon}_weight_0.0001_{n}_nmi.csv"
+        + f"fig_eps_{epsilon}_weight_{threshold}_{n}_nmi.csv"
     )
     df_quality = pd.read_csv(quality_file)
     return df_quality
@@ -199,7 +216,7 @@ def get_full_quality(dataset, epsilon, n, insertion):
     quality_file = (
         base_dir
         + f"results_dyn_deletion/{dataset}/"
-        + f"fig_eps_{epsilon}_weight_0.0001_{n}_nmi.csv"
+        + f"fig_eps_{epsilon}_weight_{threshold}_{n}_nmi.csv"
     )
     df_quality = pd.read_csv(quality_file)
     return df_quality
@@ -221,6 +238,7 @@ def extract_times_and_num_dirty(text):
 
 
 def get_df_times_dirty_edges():
+  threshold = 0.0001
   log_file = (
       base_dir
       + "results_dyn/stats_mnist"
@@ -249,6 +267,7 @@ def extract_rounds(text):
 
 
 def get_df_num_rounds():
+  threshold = 0.0001
   log_file = (
       base_dir
       + "results_dyn/mnist"

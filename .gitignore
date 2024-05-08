@@ -45,3 +45,4 @@ results
 parclusterer_exp/benchmark/__pycache__
 
 *.zip
+plots

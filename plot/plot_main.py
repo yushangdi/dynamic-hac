@@ -40,7 +40,7 @@ import pandas as pd
 import plot_io
 import seaborn as sns
 
-base_dir = "plots/"
+base_dir = "./"
 
 
 def plot_quality(
@@ -480,9 +480,13 @@ def plot_epsilons_single(dataset, n, insertion=True):
   plt.legend().set_visible(False)
   plt.yscale("log")
 
-  if dataset == "mnist":
+  if dataset == "mnist" and not insertion:
     plt.yticks(
-        [0.02, 0.03, 0.04, 0.06, 0.1], ["0.02", "0.03", "0.04", "0.06", "0.1"]
+        [0.02, 0.05, 0.09, 0.2, 0.5], ["0.02", "0.05", "0.09", "0.2", "0.5"]
+    )
+  elif dataset == "mnist":
+    plt.yticks(
+        [0.003, 0.006, 0.008, 0.015, 0.03], ["0.003", "0.006", "0.008", "0.015", "0.03"]
     )
   elif dataset == "aloi":
     plt.xticks(rotation=20)
@@ -683,12 +687,12 @@ def main(argv):
   # plot_mnist()
   # plot_tail_time_quality("aloi", 108000)
   # plot_tail_time_quality("ilsvrc_small", 50000)
-  plot_num_dirty_edges()
-  plot_num_rounds()
-  # for mode in [True, False]:
-  #   plot_epsilons_single("mnist", 70000, mode)
-  #   plot_epsilons_single("aloi", 108000, mode)
-  #   plot_epsilons_single("ilsvrc_small", 50000, mode)
+  # plot_num_dirty_edges()
+  # plot_num_rounds()
+  for mode in [True, False]: #
+    plot_epsilons_single("mnist", 70000, mode)
+    # plot_epsilons_single("aloi", 108000, mode)
+    # plot_epsilons_single("ilsvrc_small", 50000, mode)
 
   # plot_bars()
   # plot_bars_epsilon()

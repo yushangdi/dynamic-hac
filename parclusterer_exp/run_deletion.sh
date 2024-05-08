@@ -19,6 +19,7 @@ export PARLAY_NUM_THREADS=1
 
 use_output_knn="True"
 first_batch_ratio=0.99
+run_hac="True"
 
 datasets=("mnist" "aloi" "ilsvrc_small") #mnist   "imagenet" 
 num_batches=(70000 108000 50000) #70000     100000 
@@ -39,7 +40,7 @@ for i in {0..2}; do
   store_batch_size=$((num_batch / 1000))
 
   input_data="$EXP_ROOT/data/${dataset}/${dataset}.scale.permuted.fvecs"
-  ground_truth="$EXP_ROOT/data/${dataset}/${dataset}.scale.permuted_label.csv"
+  ground_truth="$EXP_ROOT/data/${dataset}/${dataset}.scale.permuted_label.bin"
   clustering="$EXP_ROOT/results/dynamic_hac_deletion_tail/${dataset}"
   output_file="$EXP_ROOT/results/results_dyn_deletion/tail_${dataset}"
   output_knn="$EXP_ROOT/results/knn/${dataset}/knn_${dataset}"
@@ -50,6 +51,7 @@ for i in {0..2}; do
     command="python3 parclusterer_exp/benchmark/run_experiment.py \
     --input_data=${input_data} \
     --ground_truth=${ground_truth} \
+    --run_hac=${run_hac} \
     --clustering=${clustering} \
     --output_file=${output_file} \
     --num_batch=${num_batch} \

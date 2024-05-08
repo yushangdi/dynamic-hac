@@ -14,8 +14,8 @@
 
 #!/bin/bash
 
-cd parclusterer_exp
-export EXP_ROOT=`pwd`
+export EXP_ROOT=$(pwd) # set EXP_ROOT to current directory
+export PARLAY_NUM_THREADS=1
 
 use_output_knn="True"
 weight=0.0001
@@ -27,12 +27,10 @@ epsilon=0.1
 
 datasets=("mnist") #mnist    "aloi" "imagenet" "ilsvrc_small"
 num_batches=(70000) #70000    108000 100000 50000
+k=50
 
-# datasets=("iris")
-# num_batches=(3) ## not used in the code now, deletion 1 point at a time
-
-# datasets=("mnist")
-# num_batches=(70000) ## not used in the code now, deletion 1 point at a time
+bazel build //parclusterer_exp/benchmark:cut_dendrogram
+bazel build //parclusterer_exp/benchmark:deletion_main
 
 ## change loop
 for i in {0..0}; do
@@ -40,12 +38,11 @@ for i in {0..0}; do
   num_batch=${num_batches[i]}
   store_batch_size=$((num_batch / 100))
 
-  input_data="benchmark/${dataset}/${dataset}.scale.permuted.fvecs"
-  ground_truth="benchmark/${dataset}/${dataset}.scale.permuted_label.csv"
-  clustering="benchmark/result/dynamic_hac_deletion_new/${dataset}"
-  output_file="$EXP_ROOT/benchmark/results_dyn_deletion_opt/${dataset}"
-  output_knn="benchmark/result/knn/${dataset}/knn_${dataset}"
-  k=50
+  input_data="$EXP_ROOT/data/${dataset}/${dataset}.scale.permuted.fvecs"
+  ground_truth="$EXP_ROOT/data/${dataset}/${dataset}.scale.permuted_label.bin"
+  clustering="$EXP_ROOT/results/dynamic_hac_deletion/${dataset}"
+  output_file="$EXP_ROOT/results/results_dyn_deletion/${dataset}"
+  output_knn="$EXP_ROOT/results/knn/${dataset}/knn_${dataset}"
 
   command="bazel run benchmark:run_experiment -- \
   --input_data=${input_data} \
@@ -60,8 +57,6 @@ for i in {0..0}; do
   --output_knn=${output_knn} \
   --first_batch_ratio=${first_batch_ratio} \
   --method=dynamic_hac_deletion"
-
-  bazel build -c opt //experimental/users/shangdi/parclusterer_exp/benchmark:deletion_main
 
   mkdir -p ${output_file}
 

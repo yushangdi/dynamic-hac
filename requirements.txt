@@ -2,6 +2,7 @@ absl-py
 matplotlib
 seaborn
 umap-learn
-graphgrove
 numpy
 tqdm
+scipy
+pybind11

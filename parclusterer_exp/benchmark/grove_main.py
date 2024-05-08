@@ -40,16 +40,17 @@ from absl import app
 from absl import flags
 import evaluate_utils
 import graphgrove
-from graphgrove.scc import SCC
-from graphgrove.sgtree import NNS_L2 as SGTree_NNS_L2
-from graphgrove.vec_scc import Cosine_SCC
+import graphgrove.vec_scc
+# from graphgrove.scc import SCC
+# from graphgrove.sgtree import NNS_L2 as SGTree_NNS_L2
+# from graphgrove.vec_scc import Cosine_SCC
 import numpy as np
 import pandas as pd
 from scipy.spatial.distance import cdist
 import sklearn.metrics.cluster as cluster_metrics
 import tqdm
 
-base_dir = "/home/ubuntu/dynamic-hac/"
+base_dir = "./"
 
 _DATASET = flags.DEFINE_string(
     "dataset",
@@ -62,7 +63,7 @@ _K = flags.DEFINE_integer("k", default=50, help="k.")
 _EVAL_INDEX_RATIO = flags.DEFINE_float(
     "eval_index_ratio",
     0,
-    "only store ARIs for index [x*n, n]. Deletion stops at this index.",
+    "only store ARIs for index [x*n, n].",
 )
 
 _BATCH_NUM = flags.DEFINE_integer(
@@ -92,14 +93,14 @@ def read_edges(filename):
 def get_clusters(level, n):
   clustering = np.ones(n) * -1
   for i, node in enumerate(level.nodes):
-    node.set_descendants()
+    # node.set_descendants()
     descendants = node.descendants()
     clustering[descendants] = i
   return clustering
 
 
 def find_best_cut(scc, ground_truth, i):
-  """Find the best place to cut a dendrogram using binary search."""
+  """Find the best scc level when compared with ground_truth."""
 
   best_ari = 0
   best_num_cluster = 0
@@ -122,8 +123,8 @@ def find_best_cut(scc, ground_truth, i):
     if nmi > best_nmi:
       best_nmi = nmi
       best_num_cluster_nmi = num_cluster
-  num_clusters = np.array(num_clusters)
-  return best_ari, num_clusters, best_nmi, best_num_cluster_nmi
+  # num_clusters = np.array(num_clusters)
+  return best_ari, best_num_cluster, best_nmi, best_num_cluster_nmi
 
 
 def get_data(dataset_subdir):
@@ -137,9 +138,8 @@ def get_data(dataset_subdir):
 dataset_subdirs = {
     "mnist": "data/mnist/mnist.scale.permuted.fvecs",
     "aloi": "data/aloi/aloi.scale.permuted.fvecs",
-    "imagenet": "data/imagenet/imagenet.scale.permuted.fvecs",
     "iris": "data/iris/iris.scale.permuted.fvecs",
-    "ilvrc_small": "data/ilvrc_small/ilvrc_small.scale.permuted.fvecs",
+    "ilsvrc_small": "data/ilsvrc_small/ilsvrc_small.scale.permuted.fvecs",
 }
 
 
@@ -157,7 +157,7 @@ def main(argv):
   points = (points + noise).astype(np.float32)
   n = len(points)
 
-  ground_truth_file = f"/{dataset_name}/{dataset_name}.scale.permuted_label.csv"
+  ground_truth_file = f"{base_dir}/data/{dataset_name}/{dataset_name}.scale.permuted_label.bin"
   ground_truth = evaluate_utils.read_ground_truth(ground_truth_file)
 
   # edges = read_edges(
@@ -177,7 +177,7 @@ def main(argv):
   k = _K.value
   thresholds = np.geomspace(1, 1e-8, num=num_rounds).astype(np.float32)
   # scc = SCC.init(thresholds, cores)  # , verbosity=1
-  scc = Cosine_SCC(k=k, num_rounds=num_rounds, thresholds=thresholds, cores=1)
+  scc = graphgrove.vec_scc.Cosine_SCC(k=k, num_rounds=num_rounds, thresholds=thresholds, cores=1)
   # scc.insert_graph_mb(edges[:, 0], edges[:, 1], edges[:, 2])
   times = []
   indices = []

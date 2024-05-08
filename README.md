@@ -48,9 +48,26 @@ python3 parclusterer_exp/benchmark/run_experiment.py \
 ./parclusterer_exp/run_dynhac_full.sh 
 ```
 
-# GraphGrove
+# GRINCH
+```bash
+./parclusterer_exp/run_grinch.sh mnist 
+./parclusterer_exp/run_grinch.sh aloi
+./parclusterer_exp/run_grinch.sh ilsvrc_small
 ```
+
+# GraphGrove
+
+
+Install from source first: https://github.com/nmonath/graphgrove/tree/main. Use python version compatible with cut_dendrogram. >=3.9. e.g. `conda install python=3.12`.
+
+```bash
+conda activate gg
+conda install --yes --file requirements.txt
+bazel build //parclusterer_exp/benchmark:cut_dendrogram
 mkdir results/results_grove
+python3 parclusterer_exp/benchmark/grove_main.py --dataset=mnist --batch_num=100
+python3 parclusterer_exp/benchmark/grove_main.py --dataset=aloi
+python3 parclusterer_exp/benchmark/grove_main.py --dataset=ilsvrc_small
 ```
 
 
@@ -72,7 +89,7 @@ conda create -n "py37" python=3.7
 conda activate py37
 conda install -c conda-forge tensorflow=1.14
 conda install -c conda-forge six
-conda install --yes --file requirements.txt # need to remove graphgrove
+conda install --yes --file requirements.txt
 
 # sample 50K images from 1000 classes
 ./utils/sample_images.sh 

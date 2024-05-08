@@ -44,8 +44,6 @@ import tqdm
 
 # # Load the shared library
 # exp_root = os.environ.get('EXP_ROOT')
-# cut_dendrogram = ctypes.CDLL(os.path.join(exp_root, "bazel-bin/parclusterer_exp/benchmark/cut_dendrogram.so"))
-
 sys.path.append("/home/sy/dynamic-hac/bazel-bin/parclusterer_exp/benchmark")
 import cut_dendrogram
 
@@ -316,17 +314,18 @@ def find_best_cut(gr, ground_truth, i):
 
     if ari > max_ari:
       max_ari = ari
-      best_threshold = threshold
+      # best_threshold = threshold
       best_num_clusters = num_clusters
 
     if nmi > best_nmi:
       best_nmi = nmi
       best_num_cluster_nmi = num_clusters
+      best_threshold = threshold
 
     if num_clusters < num_true_cluster:
       start = threshold
     else:
       end = threshold
 
-  print(best_nmi, best_num_cluster_nmi)
-  return max_ari, best_num_clusters, best_nmi, best_num_cluster_nmi
+  # print(best_nmi, best_num_cluster_nmi)
+  return max_ari, best_num_clusters, best_nmi, best_num_cluster_nmi, best_threshold

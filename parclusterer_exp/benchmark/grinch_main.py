@@ -137,6 +137,7 @@ def main(argv):
   indices = []
   insertion_nmis = []
   nmis_num_clusters = []
+  cutting_thresholds = []
 
   with open(
       output_filename + f"results/grinch_insertion/{dataset_name}_{batch_num}.log",
@@ -166,7 +167,7 @@ def main(argv):
       insertion_times.append(round_time)
 
       if i >= eval_index and (i % batch_size == 0 or i == n - 1):
-        ari, num_cluster, best_nmi, best_num_cluster_nmi = (
+        ari, num_cluster, best_nmi, best_num_cluster_nmi, threshold = (
             evaluate_utils.find_best_cut(gr, ground_truth, i)
         )
         insertion_stored_indices.append(i)
@@ -174,6 +175,7 @@ def main(argv):
         num_clusters.append(num_cluster)
         insertion_nmis.append(best_nmi)
         nmis_num_clusters.append(best_num_cluster_nmi)
+        cutting_thresholds.append(threshold)
         save_and_flush(output_file, flush_string)
         flush_string = ""
 
@@ -183,6 +185,7 @@ def main(argv):
       "Num_Clusters": num_clusters,
       "NMI": insertion_nmis,
       "NMI_Num_Clusters": nmis_num_clusters,
+      'Thresholds': cutting_thresholds
   }
   df = pd.DataFrame(df_dict)
   df.to_csv(base_dir + f"results/grinch_insertion/{dataset_name}_{batch_num}_nmi.csv")
@@ -209,6 +212,7 @@ def main(argv):
   deletion_times = []
   deletion_nmis = []
   nmis_num_clusters = []
+  cutting_thresholds = []
   with open(
       output_filename
       + f"results/grinch_deletion/{dataset_name}_{batch_num}.log",
@@ -240,7 +244,7 @@ def main(argv):
       indices.append(i)
       deletion_times.append(round_time)
       if i > eval_index and (i % batch_size == 0 or i == n - 1):
-        ari, num_cluster, best_nmi, best_num_cluster_nmi = (
+        ari, num_cluster, best_nmi, best_num_cluster_nmi, threshold = (
             evaluate_utils.find_best_cut(gr, ground_truth, i)
         )
         deletion_stored_indices.append(i)
@@ -248,6 +252,7 @@ def main(argv):
         num_clusters.append(num_cluster)
         deletion_nmis.append(best_nmi)
         nmis_num_clusters.append(best_num_cluster_nmi)
+        cutting_thresholds.append(threshold)
         save_and_flush(output_file, flush_string)
         flush_string = ""
   df_dict = {
@@ -256,6 +261,7 @@ def main(argv):
       "Num_Clusters": num_clusters,
       "NMI": deletion_nmis,
       "NMI_Num_Clusters": nmis_num_clusters,
+      'Thresholds': cutting_thresholds
   }
   df = pd.DataFrame(df_dict)
   df.to_csv(

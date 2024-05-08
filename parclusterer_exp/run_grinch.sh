@@ -16,12 +16,12 @@
 
 export EXP_ROOT=$(pwd) # set EXP_ROOT to current directory
 
-dataset="mnist"
 ratio=0
-
+dataset=$1
+echo ${dataset}
+# dataset="mnist"
 # dataset="test"
 # dataset="aloi"
-# dataset="imagenet"
 # dataset="ilsvrc_small"
 # dataset="iris"
 
@@ -38,5 +38,5 @@ mkdir -p ${base_dir}/grinch_deletion
 
 bazel build //parclusterer_exp/benchmark:cut_dendrogram
 
-echo $command  # Print the command for verification
-eval $command  # Execute the command
+echo ${command}  # Print the command for verification
+eval ${command}  # Execute the command

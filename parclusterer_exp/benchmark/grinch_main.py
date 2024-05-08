@@ -78,9 +78,8 @@ def get_data(dataset_subdir):
 dataset_subdirs = {
     "mnist": "data/mnist/mnist.scale.permuted.fvecs",
     "aloi": "data/aloi/aloi.scale.permuted.fvecs",
-    "imagenet": "data/imagenet/imagenet.scale.permuted.fvecs",
     "iris": "data/iris/iris.scale.permuted.fvecs",
-    "ilvrc_small": "data/ilvrc_small/ilvrc_small.scale.permuted.fvecs",
+    "ilsvrc_small": "data/ilsvrc_small/ilsvrc_small.scale.permuted.fvecs",
 }
 
 

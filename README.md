@@ -66,7 +66,7 @@ conda activate gg
 conda install --yes --file requirements.txt
 bazel build //parclusterer_exp/benchmark:cut_dendrogram
 mkdir results/results_grove
-python3 parclusterer_exp/benchmark/grove_main.py --dataset=mnist --batch_num=100
+python3 parclusterer_exp/benchmark/grove_main.py --dataset=mnist
 python3 parclusterer_exp/benchmark/grove_main.py --dataset=aloi
 python3 parclusterer_exp/benchmark/grove_main.py --dataset=ilsvrc_small
 ```

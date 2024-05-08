@@ -303,8 +303,11 @@ def find_best_cut(gr, ground_truth, i):
   best_num_clusters = 0
   best_nmi = 0
   best_num_cluster_nmi = 0
-  while end - start > 1e-6:
-    threshold = (start + end) / 2
+  # while end - start > 1e-6:
+  #   threshold = (start + end) / 2
+  thresholds = list(np.logspace(-2, 0, 40))
+  # print(thresholds)
+  for threshold in thresholds:
     clustering = gr.flat_clustering(threshold)[:i]
     ari = cluster_metrics.adjusted_rand_score(ground_truth, clustering)
     nmi = cluster_metrics.normalized_mutual_info_score(
@@ -322,10 +325,10 @@ def find_best_cut(gr, ground_truth, i):
       best_num_cluster_nmi = num_clusters
       best_threshold = threshold
 
-    if num_clusters < num_true_cluster:
-      start = threshold
-    else:
-      end = threshold
+    # if num_clusters < num_true_cluster:
+    #   start = threshold
+    # else:
+    #   end = threshold
 
   # print(best_nmi, best_num_cluster_nmi)
   return max_ari, best_num_clusters, best_nmi, best_num_cluster_nmi, best_threshold

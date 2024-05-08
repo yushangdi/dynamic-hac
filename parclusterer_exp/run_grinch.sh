@@ -25,13 +25,11 @@ echo ${dataset}
 # dataset="ilsvrc_small"
 # dataset="iris"
 
-# ratio=0.99
-
 base_dir="$EXP_ROOT/results/"
 
 command="python3 parclusterer_exp/benchmark/grinch_main.py \
 --log_file=$EXP_ROOT/
---dataset=${dataset} --eval_index_ratio=${ratio} --batch_num=100"
+--dataset=${dataset} --eval_index_ratio=${ratio} --batch_num=1000"
 
 mkdir -p ${base_dir}/grinch_insertion
 mkdir -p ${base_dir}/grinch_deletion

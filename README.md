@@ -46,6 +46,7 @@ python3 parclusterer_exp/benchmark/run_experiment.py \
 
 ./parclusterer_exp/run_hac.sh 
 ./parclusterer_exp/run_dynhac_full.sh 
+./parclusterer_exp/run_dynhac.sh 
 ```
 
 # GRINCH

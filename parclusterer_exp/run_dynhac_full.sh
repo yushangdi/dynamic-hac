@@ -46,7 +46,8 @@ for i in {0..0}; do
   --first_batch_ratio=${first_batch}"
 
   bazel build //parclusterer_exp/benchmark:cut_dendrogram
-  bazel build //parclusterer_exp/benchmark:parhac_main
+  # log stats
+  bazel build --copt=-DABSL_MIN_LOG_LEVEL=0 --copt=-DABSL_MAX_VLOG_VERBOSITY=-1 //parclusterer_exp/benchmark:parhac_main
 
   mkdir -p ${output_file}
 

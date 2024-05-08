@@ -21,12 +21,9 @@ use_output_knn="True"
 weight=0.0001
 first_batch_ratio=0
 epsilon=0.1
-# dataset="iris"
-# num_batch=2
-# use_output_knn="True"
 
-datasets=("mnist") #mnist    "aloi" "imagenet" "ilsvrc_small"
-num_batches=(70000) #70000    108000 100000 50000
+datasets=("mnist")
+num_batches=(70000)
 k=50
 
 bazel build //parclusterer_exp/benchmark:cut_dendrogram
@@ -44,7 +41,7 @@ for i in {0..0}; do
   output_file="$EXP_ROOT/results/results_dyn_deletion/${dataset}"
   output_knn="$EXP_ROOT/results/knn/${dataset}/knn_${dataset}"
 
-  command="bazel run benchmark:run_experiment -- \
+  command="python3 parclusterer_exp/benchmark/run_experiment.py \
   --input_data=${input_data} \
   --ground_truth=${ground_truth} \
   --clustering=${clustering} \

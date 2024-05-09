@@ -63,8 +63,8 @@ for i in {0..2}; do
     --first_batch_ratio=${first_batch_ratio} \
     --method=dynamic_hac_deletion"
 
-    echo $command  # Print the command for verification
-    eval $command  # Execute the command
+    echo ${command}  # Print the command for verification
+    eval ${command}  # Execute the command
     echo
     done 
 done

@@ -75,17 +75,17 @@ def get_hac_quality(dataset):
 
 def get_grinch_dfs(dataset):
   grinch_insertion_time = (
-      base_dir + "results_grinch/" + dataset + f"_1000_time.csv"
+      base_dir + "grinch_insertion/" + dataset + f"_1000_time.csv"
   )
   grinch_insertion_quality = (
-      base_dir + "results_grinch/" + dataset + f"_1000_nmi.csv"
+      base_dir + "grinch_insertion/" + dataset + f"_1000_nmi.csv"
   )
 
   grinch_deletion_time = (
-      base_dir + "results_grinch_deletion/" + dataset + f"_1000_time.csv"
+      base_dir + "grinch_deletion/" + dataset + f"_1000_time.csv"
   )
   grinch_deletion_quality = (
-      base_dir + "results_grinch_deletion/" + dataset + f"_1000_nmi.csv"
+      base_dir + "grinch_deletion/" + dataset + f"_1000_nmi.csv"
   )
 
   try:
@@ -241,7 +241,7 @@ def get_df_times_dirty_edges():
   threshold = 0.0001
   log_file = (
       base_dir
-      + "results_dyn/stats_mnist"
+      + "results_dyn/mnist"
       + f"/log_eps_{epsilon}_weight_{threshold}_70000.txt"
   )
 

@@ -688,17 +688,17 @@ def main(argv):
   if len(argv) > 1:
     raise app.UsageError("Too many command-line arguments.")
   # plot_mnist() # DONE
-  # plot_tail_time_quality("aloi", 108000)
+  # plot_tail_time_quality("aloi", 108000) # DONE
   # plot_tail_time_quality("ilsvrc_small", 50000) # DONE
   # plot_num_dirty_edges() # DONE
   # plot_num_rounds() # DONE
   # for mode in [True, False]:
     # plot_epsilons_single("mnist", 70000, mode) # DONE
-    # plot_epsilons_single("aloi", 108000, mode)
+    # plot_epsilons_single("aloi", 108000, mode) # DONE
     # plot_epsilons_single("ilsvrc_small", 50000, mode) # DONE
 
-  # plot_bars()
-  # plot_bars_epsilon()
+  # plot_bars() # DONE
+  # plot_bars_epsilon() # DONE
 
 
 if __name__ == "__main__":

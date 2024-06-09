@@ -57,6 +57,7 @@ _DATA = flags.DEFINE_string("data", default=None, help="Name of data set.")
 
 _PERMUTE = flags.DEFINE_bool("permute", default=True, help="Permute the data randomly if true.")
 
+_SORT = flags.DEFINE_bool("sort", default=False, help="Sort the points by labels if true.")
 
 class Error(Exception):
   """Base class for exceptions in this module."""
@@ -149,7 +150,7 @@ def store_points(points, output_file):
   return points_flatten
 
 
-def store(input_file, output_file, dataset, permute=True):
+def store(input_file, output_file, dataset, permute=True, sort=False):
   """store points from input_file to fvecs format.
 
   Args:
@@ -159,7 +160,10 @@ def store(input_file, output_file, dataset, permute=True):
       dataset (str): Name of the dataset to be processed. Currently supports
         "aloi".
       permute (bool, optional): If True, randomly permutes the order of the
-        points before storing. Defaults to True.
+        points before storing. Defaults to True. Only one of `permute` and `sort` 
+        should be True.
+      sort (bool, optional): If True, sort by cluster ids. Defaults to False. 
+        Only one of `permute` and `sort` should be True.
 
   Raises:
       KeyError: If an unknown dataset is specified.
@@ -204,6 +208,9 @@ def store(input_file, output_file, dataset, permute=True):
         points.shape[0]
     )
     points = points[permuted_indices]  # Permute the rows using the indices
+  elif sort:
+    print("sorting")
+    points = points[points[:,0].argsort()]
   points, labels = preprocessing_data(points)
   print("points shape: ", points.shape)
   print("labels shape: ", labels.shape)
@@ -236,7 +243,7 @@ def preprocessing_data(points):
 
 def main(argv):
   # input file, output file, data set
-  store(_DATA_FILE.value, _OUTPUT_FILE.value, _DATA.value, _PERMUTE.value)
+  store(_DATA_FILE.value, _OUTPUT_FILE.value, _DATA.value, _PERMUTE.value, _SORT.value)
 
 
 if __name__ == "__main__":

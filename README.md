@@ -11,6 +11,7 @@ python3 utils/fvecs_converter.py --data_file=$EXP_ROOT --output_file=$EXP_ROOT/d
 # MNIST
 python3 utils/embed_mnist.py --output=$EXP_ROOT/data/mnist
 python3 utils/fvecs_converter.py --data_file=$EXP_ROOT/data/mnist --output_file=$EXP_ROOT/data/mnist/mnist.scale.permuted --data=mnist
+python3 utils/fvecs_converter.py --data_file=$EXP_ROOT/data/mnist --output_file=$EXP_ROOT/data/mnist/mnist.scale.sorted --data=mnist --permute=False --sort=True
 # ALOI 
 # download data
 wget https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/multiclass/aloi.scale.bz2
@@ -55,6 +56,7 @@ python3 parclusterer_exp/benchmark/run_experiment.py \
 ./parclusterer_exp/run_grinch.sh mnist 
 ./parclusterer_exp/run_grinch.sh aloi
 ./parclusterer_exp/run_grinch.sh ilsvrc_small
+./parclusterer_exp/run_grinch_sorted.sh mnist 
 ```
 
 # GraphGrove
@@ -69,6 +71,9 @@ mkdir results/results_grove
 python3 parclusterer_exp/benchmark/grove_main.py --dataset=mnist
 python3 parclusterer_exp/benchmark/grove_main.py --dataset=aloi
 python3 parclusterer_exp/benchmark/grove_main.py --dataset=ilsvrc_small
+
+mkdir results/results_grove_sort
+python3 parclusterer_exp/benchmark/grove_main.py --dataset=mnist --sort=True
 ```
 
 

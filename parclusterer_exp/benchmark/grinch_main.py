@@ -51,6 +51,9 @@ _EVAL_INDEX_RATIO = flags.DEFINE_float(
     0,
     "only store ARIs for index [x*n, n]. Deletion stops at this index.",
 )
+_SORT = flags.DEFINE_bool(
+    "sort", default=False, 
+    help="Used the sorted points instead of permuted points.")
 
 base_dir = "./"
 
@@ -97,10 +100,15 @@ def main(argv):
   if len(argv) > 1:
     raise app.UsageError("Too many command-line arguments.")
 
+  use_sorted = _SORT.value
+  folder_affix = "_sort" if use_sorted else ""
   dataset_name = _DATASET.value
 
   if dataset_name in dataset_subdirs:
-    dataset = get_data(dataset_subdirs[dataset_name])
+    data_addr = dataset_subdirs[dataset_name]
+    if use_sorted:
+      data_addr = data_addr.replace("permuted", "sorted")
+    dataset = get_data(data_addr)
   else:
     raise ValueError(f"Unknown dataset: {dataset_name}")
 
@@ -110,6 +118,10 @@ def main(argv):
   ground_truth_file = (
       f"{base_dir}/data/{dataset_name}/{dataset_name}.scale.permuted_label.bin"
   )
+  if use_sorted:
+    ground_truth_file = (
+      f"{base_dir}/data/{dataset_name}/{dataset_name}.scale.sorted_label.bin"
+    )
   ground_truth = [1, 2, 3, 4, 5, 6]
   if dataset_name != "test":
     ground_truth = evaluate_utils.read_ground_truth(ground_truth_file)
@@ -139,7 +151,7 @@ def main(argv):
   cutting_thresholds = []
 
   with open(
-      output_filename + f"results/grinch_insertion/{dataset_name}_{batch_num}.log",
+      output_filename + f"results/grinch_insertion{folder_affix}/{dataset_name}_{batch_num}.log",
       "w",
       buffering=1,
   ) as output_file:
@@ -187,12 +199,12 @@ def main(argv):
       'Thresholds': cutting_thresholds
   }
   df = pd.DataFrame(df_dict)
-  df.to_csv(base_dir + f"results/grinch_insertion/{dataset_name}_{batch_num}_nmi.csv")
+  df.to_csv(base_dir + f"results/grinch_insertion{folder_affix}/{dataset_name}_{batch_num}_nmi.csv")
   evaluate_utils.plot(
       insertion_stored_indices,
       insertion_nmis,
       num_clusters,
-      base_dir + f"results/grinch_insertion/{dataset_name}_{batch_num}",
+      base_dir + f"results/grinch_insertion{folder_affix}/{dataset_name}_{batch_num}",
   )
 
   time_dict = {
@@ -200,7 +212,7 @@ def main(argv):
       "Round": insertion_times,
   }
   df = pd.DataFrame(time_dict)
-  df.to_csv(base_dir + f"results/grinch_insertion/{dataset_name}_{batch_num}_time.csv")
+  df.to_csv(base_dir + f"results/grinch_insertion{folder_affix}/{dataset_name}_{batch_num}_time.csv")
 
   gr.clear_stats()
   flush_string = ""
@@ -214,7 +226,7 @@ def main(argv):
   cutting_thresholds = []
   with open(
       output_filename
-      + f"results/grinch_deletion/{dataset_name}_{batch_num}.log",
+      + f"results/grinch_deletion{folder_affix}/{dataset_name}_{batch_num}.log",
       "w",
       buffering=1,
   ) as output_file:
@@ -264,13 +276,13 @@ def main(argv):
   }
   df = pd.DataFrame(df_dict)
   df.to_csv(
-      base_dir + f"results/grinch_deletion/{dataset_name}_{batch_num}_nmi.csv"
+      base_dir + f"results/grinch_deletion{folder_affix}/{dataset_name}_{batch_num}_nmi.csv"
   )
   evaluate_utils.plot(
       deletion_stored_indices,
       deletion_nmis,
       num_clusters,
-      base_dir + f"results/grinch_deletion/{dataset_name}_{batch_num}",
+      base_dir + f"results/grinch_deletion{folder_affix}/{dataset_name}_{batch_num}",
   )
 
   time_dict = {
@@ -279,7 +291,7 @@ def main(argv):
   }
   df = pd.DataFrame(time_dict)
   df.to_csv(
-      base_dir + f"results/grinch_deletion/{dataset_name}_{batch_num}_time.csv"
+      base_dir + f"results/grinch_deletion{folder_affix}/{dataset_name}_{batch_num}_time.csv"
   )
 
 

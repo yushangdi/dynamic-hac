@@ -69,7 +69,9 @@ _EVAL_INDEX_RATIO = flags.DEFINE_float(
 _BATCH_NUM = flags.DEFINE_integer(
     "batch_num", 1000, "num. of dendroram to evaluate."
 )
-
+_SORT = flags.DEFINE_bool(
+    "sort", default=False, 
+    help="Used the sorted points instead of permuted points.")
 
 def fvecs_read(f):
   a = np.frombuffer(f.read(), dtype="int32")
@@ -146,8 +148,13 @@ dataset_subdirs = {
 def main(argv):
 
   dataset_name = _DATASET.value
+  use_sorted = _SORT.value
+  folder_affix = "_sort" if use_sorted else ""
   if dataset_name in dataset_subdirs:
-    points = get_data(dataset_subdirs[dataset_name])
+    data_addr = dataset_subdirs[dataset_name]
+    if use_sorted:
+      data_addr = data_addr.replace("permuted", "sorted")
+    points = get_data(data_addr)
   else:
     raise ValueError(f"Unknown dataset: {dataset_name}")
   # Normalize each vector to have a unit norm
@@ -158,6 +165,10 @@ def main(argv):
   n = len(points)
 
   ground_truth_file = f"{base_dir}/data/{dataset_name}/{dataset_name}.scale.permuted_label.bin"
+  if use_sorted:
+    ground_truth_file = (
+      f"{base_dir}/data/{dataset_name}/{dataset_name}.scale.sorted_label.bin"
+    )
   ground_truth = evaluate_utils.read_ground_truth(ground_truth_file)
 
   # edges = read_edges(
@@ -214,13 +225,13 @@ def main(argv):
       "NMI_Num_Clusters": nmis_num_clusters,
   }
   df = pd.DataFrame(df_dict)
-  df.to_csv(base_dir + f"results/results_grove/{dataset_name}_{batch_num}_nmi.csv")
+  df.to_csv(base_dir + f"results/results_grove{folder_affix}/{dataset_name}_{batch_num}_nmi.csv")
   time_dict = {
       "Index": indices,
       "Round": times,
   }
   df = pd.DataFrame(time_dict)
-  df.to_csv(base_dir + f"results/results_grove/{dataset_name}_{batch_num}_time.csv")
+  df.to_csv(base_dir + f"results/results_grove{folder_affix}/{dataset_name}_{batch_num}_time.csv")
 
   # print(scc.levels)
   # for level in scc.levels:

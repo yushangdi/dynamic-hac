@@ -12,7 +12,7 @@ git clone https://github.com/iesl/grinch.git
 Download and store data in fvecs format. The labels must be in int.
 ALOI data. ALOI data are already scaled to between 0 and 1.
 ```bash
-cd experimental/users/shangdi/parclusterer_exp/
+cd experimental/users/ubuntu/parclusterer_exp/
 export EXP_ROOT=`pwd`
 # download data
 wget https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/multiclass/aloi.scale.bz2
@@ -32,7 +32,7 @@ rm aloi.scale.bz2
 
 Run experiments ParHAC on ALIO, store the clustered result. `l` needs to be greater than `k+1`.
 ```bash
- bazel run //experimental/users/shangdi/parclusterer_exp/benchmark:parhac_main -- --input_data=benchmark/aloi/aloi.scale.permuted.fvecs --output_clustering=benchmark/result/parhac/aloi --k=50 --max_degree=100 --l=100 2>&1 | tee log_eps_0.1_weight_0.1.txt
+ bazel run //experimental/users/ubuntu/parclusterer_exp/benchmark:parhac_main -- --input_data=benchmark/aloi/aloi.scale.permuted.fvecs --output_clustering=benchmark/result/parhac/aloi --k=50 --max_degree=100 --l=100 2>&1 | tee log_eps_0.1_weight_0.1.txt
 ```
 
 Plot running time and evaluate Clustering
@@ -43,9 +43,9 @@ bazel run benchmark:evaluate_clustering -- --clustering=benchmark/result/parhac/
 
 **Run experiment and plot.**
 ```bash
-cd experimental/users/shangdi/parclusterer_exp/
+cd experimental/users/ubuntu/parclusterer_exp/
 export EXP_ROOT=`pwd`
-bazel build //experimental/users/shangdi/parclusterer_exp/benchmark:parhac_main
+bazel build //experimental/users/ubuntu/parclusterer_exp/benchmark:parhac_main
 bazel run benchmark:run_experiment -- \
 --input_data=benchmark/aloi/aloi.scale.permuted.fvecs \
 --ground_truth=benchmark/aloi/aloi.scale.permuted_label.csv \
@@ -63,7 +63,7 @@ It is embedded to 2 dimensions.
 
 ```bash
 # Embed
-bazel run //experimental/users/shangdi/parclusterer_exp/benchmark:embed_mnist -- --plot=True --output=experimental/users/shangdi/parclusterer_exp/
+bazel run //experimental/users/ubuntu/parclusterer_exp/benchmark:embed_mnist -- --plot=True --output=experimental/users/ubuntu/parclusterer_exp/
 bazel run benchmark:fvecs_converter -- --data_file=$EXP_ROOT --output_file=benchmark/mnist/mnist.scale.permuted --data=mnist
 # points shape:  (70000, 2)
 # labels shape:  (70000,)
@@ -75,7 +75,7 @@ bazel run benchmark:fvecs_converter -- --data_file=$EXP_ROOT --output_file=bench
 
 **Run experiment and plot.**
 ```bash
-cd experimental/users/shangdi/parclusterer_exp/
+cd experimental/users/ubuntu/parclusterer_exp/
 export EXP_ROOT=`pwd`
 bazel run benchmark:run_experiment -- \
 --input_data=benchmark/mnist/mnist.scale.permuted.fvecs \
@@ -92,7 +92,7 @@ bazel run benchmark:run_experiment -- \
 --output_file=$EXP_ROOT/benchmark/results_dyn/mnist \
 --num_batch=100 --k=50 --weight=0.001
 
- bazel run //experimental/users/shangdi/parclusterer_exp/benchmark:parhac_main -- \
+ bazel run //experimental/users/ubuntu/parclusterer_exp/benchmark:parhac_main -- \
  --input_data=benchmark/mnist/mnist.scale.permuted.fvecs \
  --output_clustering=benchmark/result/dynamic_hac/mnist \
  --method=dynamic_hac --v=-1 --pbbs_num_workers=1 \
@@ -108,7 +108,7 @@ bazel run benchmark:process_result -- \
 
 **Run dynamic hac**
 ```bash
- bazel run //experimental/users/shangdi/parclusterer_exp/benchmark:parhac_main -- \
+ bazel run //experimental/users/ubuntu/parclusterer_exp/benchmark:parhac_main -- \
  --input_data=benchmark/mnist/mnist.scale.permuted.fvecs \
  --output_clustering=benchmark/result/dynamic_hac/mnist \
  --method=dynamic_hac --v=-1 --pbbs_num_workers=1 \
@@ -118,7 +118,7 @@ bazel run benchmark:process_result -- \
 
 ### ilsvrc_small
 ```bash
-bazel run //experimental/users/shangdi/parclusterer_exp/benchmark:fvecs_converter -- \
+bazel run //experimental/users/ubuntu/parclusterer_exp/benchmark:fvecs_converter -- \
 --data_file=data/ilsvrc_small/ilsvrc_small.tsv --data=ilsvrc \
 --output_file=benchmark/ilsvrc_small/ilsvrc_small.scale.permuted
 # permuting
@@ -133,7 +133,7 @@ bazel run //experimental/users/shangdi/parclusterer_exp/benchmark:fvecs_converte
 
 ### Imagenet
 ```bash
-bazel run //experimental/users/shangdi/parclusterer_exp/benchmark:fvecs_converter -- \
+bazel run //experimental/users/ubuntu/parclusterer_exp/benchmark:fvecs_converter -- \
 --data_file=benchmark/imagenet/imagenet.tsv --data=imagenet \
 --output_file=benchmark/imagenet/imagenet.scale.permuted
 # points shape:  (100000, 2048)
@@ -154,7 +154,7 @@ bazel run benchmark:run_experiment -- \
 ### Covtype
 
 ```bash
-bazel run //experimental/users/shangdi/parclusterer_exp/benchmark:fvecs_converter \
+bazel run //experimental/users/ubuntu/parclusterer_exp/benchmark:fvecs_converter \
 -- --data_file=data/covtype/covtype.tsv --data=covtype \
 --output_file=benchmark/covtype/covtype.scale.permuted
 # permuting

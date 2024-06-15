@@ -44,7 +44,7 @@ import tqdm
 
 # # Load the shared library
 # exp_root = os.environ.get('EXP_ROOT')
-sys.path.append("/home/sy/dynamic-hac/bazel-bin/parclusterer_exp/benchmark")
+sys.path.append("/home/ubuntu/dynamic-hac/bazel-bin/parclusterer_exp/benchmark")
 import cut_dendrogram
 
 class Error(Exception):

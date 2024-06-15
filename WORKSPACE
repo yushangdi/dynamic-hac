@@ -49,7 +49,7 @@ git_repository(
 
 git_repository(
     name = "parlayann",
-    remote = "git@github.com:yushangdi/ParlayANN.git",
+    remote = "git@github.com:cmuparlay/ParlayANN.git",
     commit = "67a0ad46c4728fcda1e7825a3786e4e5f07f43ed", # branch sync
 )
 

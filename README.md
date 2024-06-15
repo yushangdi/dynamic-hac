@@ -95,9 +95,9 @@ conda install --yes --file requirements.txt
 # sample 50K images from 1000 classes
 ./utils/sample_images.sh 
 # double check there are 50K images
-find /home/sy/imagenet/images/ -type d -maxdepth 1 | wc -l
+find /home/ubuntu/imagenet/images/ -type d -maxdepth 1 | wc -l
 # embed
-python3 utils/embed_imagenet.py /home/sy/imagenet/images /home/sy/imagenet/
+python3 utils/embed_imagenet.py /home/ubuntu/imagenet/images /home/ubuntu/imagenet/
 ```
 
 

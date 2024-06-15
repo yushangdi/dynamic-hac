@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Directory containing subdirectories
-main_dir="/home/sy/ILSVRC/Data/CLS-LOC/train/"
+main_dir="/home/ubuntu/ILSVRC/Data/CLS-LOC/train/"
 
 # Destination directory for sampled files (make sure it exists or create it)
-destination_dir="/home/sy/imagenet/images/"
+destination_dir="/home/ubuntu/imagenet/images/"
 
 # Iterate through each subdirectory in the main directory
 for dir in "$main_dir"*/; do

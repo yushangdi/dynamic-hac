@@ -41,10 +41,9 @@ git_repository(
     strip_prefix = "include/",
 )
 
-git_repository(
-    name = "com_github_graph_mining",
-    remote = "https://github.com/google/graph-mining.git",
-    commit = "aaf5a5a1b84d35341776a8b1694640ea07c7c596"
+local_repository(
+    name = "clustering",
+    path = "clustering/",
 )
 
 git_repository(
@@ -63,7 +62,7 @@ FARMHASH_SHA256 = "18392cf0736e1d62ecbb8d695c31496b6507859e8c75541d7ad0ba092dc52
 
 http_archive(
     name = "farmhash_archive",
-    build_file = "@com_github_graph_mining//utils:farmhash.BUILD",
+    build_file = "@clustering//utils:farmhash.BUILD",
     sha256 = FARMHASH_SHA256,
     strip_prefix = "farmhash-{commit}".format(commit = FARMHASH_COMMIT),
     urls = ["https://github.com/google/farmhash/archive/{commit}.tar.gz".format(commit = FARMHASH_COMMIT)],

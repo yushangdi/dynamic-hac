@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Copyright 2024 Google LLC
+# Copyright 2024 Approximate Hac Experiments Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -143,7 +143,7 @@ def plot_quality(
   max_x = df_dyn_insertion_quality["Index"].max()
   plt.xlim(min_x, max_x)
   plt.tight_layout()
-  plt.savefig(base_dir + "plots/" + dataset + "_quality.pdf")
+  plt.savefig(base_dir + "plots/" + dataset + "_quality.png")
   plt.clf()
 
 
@@ -287,7 +287,7 @@ def plot_time(
   if dataset == "ilsvrc_small":
     axs[0].set_ylim((1e-2, 15))
 
-  plt.savefig(base_dir + "plots/" + dataset + "_time.pdf")
+  plt.savefig(base_dir + "plots/" + dataset + "_time.png")
   plt.clf()
 
 
@@ -403,7 +403,7 @@ def plot_num_dirty_edges():
   plt.ylabel("Num. Dirty Edges", fontsize=fontsize)
   plt.tick_params(axis="both", labelsize=fontsize)
   plt.tight_layout()
-  plt.savefig(base_dir + "plots/mnist_time_num_edges.pdf")
+  plt.savefig(base_dir + "plots/mnist_time_num_edges.png")
   plt.clf()
 
 
@@ -420,7 +420,7 @@ def plot_num_rounds():
   plt.ylabel("Num. Rounds", fontsize=fontsize)
   plt.tick_params(axis="both", labelsize=fontsize)
   plt.tight_layout()
-  plt.savefig(base_dir + "plots/mnist_num_rounds.pdf")
+  plt.savefig(base_dir + "plots/mnist_num_rounds.png")
   plt.clf()
 
 
@@ -457,7 +457,7 @@ def plot_epsilons_single(dataset, n, insertion=True):
   )
 
   plt.tight_layout()
-  plt.savefig(base_dir + f"plots/{dataset}{mode}_epsilons_quality.pdf")
+  plt.savefig(base_dir + f"plots/{dataset}{mode}_epsilons_quality.png")
   plt.clf()
 
   plt.clf()
@@ -496,7 +496,7 @@ def plot_epsilons_single(dataset, n, insertion=True):
     plt.yticks([0.01, 0.1, 1, 10], ["0.01", "0.1", "1", "10"])
 
   plt.tight_layout()
-  plt.savefig(base_dir + f"plots/{dataset}{mode}_epsilons.pdf")
+  plt.savefig(base_dir + f"plots/{dataset}{mode}_epsilons.png")
   plt.clf()
 
 
@@ -565,7 +565,7 @@ def plot_bars():
   axs[1].get_legend().remove()
 
   plt.tight_layout()
-  plt.savefig(base_dir + "plots/time_bar.pdf")
+  plt.savefig(base_dir + "plots/time_bar.png")
   plt.clf()
 
   fig, ax = plt.subplots(1, 1, figsize=(8, 4), sharex=True)
@@ -584,6 +584,7 @@ def plot_bars():
       markerscale=5,
       ncol=4,
   )
+  plt.ylim((0.6, 1))
 
   plt.tight_layout()
   plt.savefig(base_dir + "plots/nmi_bar.pdf")
@@ -648,7 +649,7 @@ def plot_bars_epsilon():
     ax.set_ylabel("Speedup over epsilon=0", fontsize=font_size)
 
   plt.tight_layout()
-  plt.savefig(base_dir + "plots/time_bar_epsilon.pdf")
+  plt.savefig(base_dir + "plots/time_bar_epsilon.png")
   plt.clf()
 
   fig, axs = plt.subplots(2, 1, figsize=(8, 8), sharex=False)
@@ -680,7 +681,7 @@ def plot_bars_epsilon():
     ax.get_legend().remove()
 
   plt.tight_layout()
-  plt.savefig(base_dir + "plots/nmi_bar_epsilon.pdf")
+  plt.savefig(base_dir + "plots/nmi_bar_epsilon.png")
   plt.clf()
 
 
@@ -697,8 +698,8 @@ def main(argv):
   #   plot_epsilons_single("aloi", 108000, mode) # DONE
   #   plot_epsilons_single("ilsvrc_small", 50000, mode) # DONE
 
-  # plot_bars() # DONE
-  plot_bars_epsilon() # DONE
+  plot_bars() # DONE
+  # plot_bars_epsilon() # DONE
 
 
 if __name__ == "__main__":

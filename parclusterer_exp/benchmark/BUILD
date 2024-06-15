@@ -134,71 +134,6 @@ cc_binary(
     ],
 )
 
-# pytype_strict_library(
-#     name = "evaluate_utils",
-#     srcs = ["evaluate_utils.py"],
-#     deps = [
-#         ":cut_dendrogram",
-#         "//third_party/py/matplotlib",
-#         "//third_party/py/numpy",
-#         "//third_party/py/pandas:pandas_internal",
-#         "//third_party/py/sklearn",
-#         "//third_party/py/tqdm",
-#     ],
-# )
-
-# pytype_strict_binary(
-#     name = "evaluate_clustering",
-#     srcs = ["evaluate_clustering.py"],
-#     test_lib = True,
-#     deps = [
-#         ":evaluate_utils",
-#         "//third_party/py/absl:app",
-#         "//third_party/py/absl/flags",
-#         "//third_party/py/pandas:pandas_internal",
-#         "//third_party/py/sklearn",
-#     ],
-# )
-
-# pytype_strict_binary(
-#     name = "process_result",
-#     srcs = ["process_result.py"],
-#     test_lib = True,
-#     deps = [
-#         ":evaluate_utils",
-#         "//third_party/py/absl:app",
-#         "//third_party/py/absl/flags",
-#     ],
-# )
-
-# pytype_strict_binary(
-#     name = "run_experiment",
-#     srcs = ["run_experiment.py"],
-#     deps = [
-#         ":evaluate_utils",
-#         "//third_party/py/absl:app",
-#         "//third_party/py/absl/flags",
-#     ],
-# )
-
-# pytype_strict_binary(
-#     name = "grove_main",
-#     srcs = ["grove_main.py"],
-#     python_version = "PY3",
-#     srcs_version = "PY3ONLY",
-#     deps = [
-#         ":evaluate_utils",
-#         "//third_party/py/absl:app",
-#         "//third_party/py/absl/flags",
-#         "//third_party/py/graphgrove",
-#         "//third_party/py/numpy",
-#         "//third_party/py/pandas:pandas_internal",
-#         "//third_party/py/scipy",
-#         "//third_party/py/sklearn",
-#         "//third_party/py/tqdm",
-#     ],
-# )
-
 cc_library(
     name = "io",
     hdrs = ["io.h"],
@@ -233,28 +168,3 @@ pybind_extension(
     ],
 )
 
-
-# pytype_strict_library(
-#     name = "grinch",
-#     srcs = ["grinch.py"],
-#     deps = [
-#         "//third_party/py/numpy",
-#         "//third_party/py/scipy",
-#     ],
-# )
-
-# pytype_strict_binary(
-#     name = "grinch_main",
-#     srcs = ["grinch_main.py"],
-#     # python_version = "PY3",
-#     deps = [
-#         ":evaluate_utils",
-#         ":grinch",
-#         "//third_party/py/absl:app",
-#         "//third_party/py/absl/flags",
-#         "//third_party/py/absl/logging",
-#         "//third_party/py/numpy",
-#         "//third_party/py/pandas:pandas_internal",
-#         "//third_party/py/tqdm",
-#     ],
-# )

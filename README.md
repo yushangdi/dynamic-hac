@@ -108,3 +108,6 @@ python3 utils/embed_imagenet.py /home/ubuntu/imagenet/images /home/ubuntu/imagen
 mkdir plots
 python3 plot/plot_main.py
 ```
+
+# Note
+We have already made the code for our algorithm available as part of a larger open-source project, but we did not include a direct link in order to preserve the anonymity of the authors during the review process. Once our paper is published, we will provide the name of the library and a link to the repository in our paper. In the meantime, please find an anonymized version of the core code in `clustering.zip`. The experiment code in this repo has been slightly modified to preserve the anonymity of the authors during the review process and some commands might fail. Once our paper is published, we will provide the correct commands.
